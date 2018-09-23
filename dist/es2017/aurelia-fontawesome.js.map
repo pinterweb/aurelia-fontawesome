@@ -1,0 +1,1 @@
+{"version":3,"file":"aurelia-fontawesome.js","sourceRoot":"","sources":["../../src/aurelia-fontawesome.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,QAAQ,EAET,MAAM,mBAAmB,CAAC;AAE3B,MAAM,UAAU,SAAS,CAAC,OAA+B;IACvD,OAAO,CAAC,eAAe,CAAC,QAAQ,CAAC,UAAU,CAAC,qBAAqB,CAAC,CAAC,CAAC;AACtE,CAAC;AAED,cAAc,qBAAqB,CAAC"}

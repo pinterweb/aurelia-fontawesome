@@ -1,0 +1,97 @@
+{
+  "name": "aurelia-fontawesome",
+  "version": "0.1.0",
+  "description": "Aurelia wrapper around the font awesome 5 library",
+  "keywords": [
+    "aurelia",
+    "fontawesome",
+    "fortawesome",
+    "icon"
+  ],
+  "main": "dist/commonjs/aurelia-fontawesome.js",
+  "typings": "dist/commonjs/aurelia-fontawesome.d.ts",
+  "scripts": {
+    "lint": "cross-env tslint --project tsconfig.json",
+    "pretest": "cross-env npm run lint",
+    "test": "cross-env jest --config=./test/jest.config.js",
+    "test-ci": "cross-env jest && cat ./test/coverage-jest/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test-watch": "concurrently \"tsc --watch\" \"jest --watch\"",
+    "build:amd": "cross-env tsc --p tsconfig-build.json --outDir dist/amd --module amd",
+    "build:commonjs": "cross-env tsc --p tsconfig-build.json --outDir dist/commonjs --module commonjs",
+    "build:es2015": "cross-env tsc --p tsconfig-build.json --outDir dist/es2015 --module es2015",
+    "build:es2017": "cross-env tsc --p tsconfig-build.json --outDir dist/es2017 --module es2015 --target es2017",
+    "build:native-modules": "cross-env tsc --p tsconfig-build.json --outDir dist/native-modules --module es2015",
+    "build:system": "cross-env tsc --p tsconfig-build.json --outDir dist/system --module system",
+    "prebuild": "cross-env rimraf dist",
+    "build": "concurrently \"npm run build:amd\" \"npm run build:commonjs\" \"npm run build:es2015\" \"npm run build:es2017\" \"npm run build:native-modules\" \"npm run build:system\"",
+    "precommit": "npm run lint",
+    "predoc": "cross-env rimraf doc/api.json && rimraf dist/doc-temp && tsc --p tsconfig-build.json --module amd --outFile dist/doc-temp/aurelia-fontawesome.js && node doc/shape-defs && copyfiles tsconfig.json dist/doc-temp",
+    "doc": "cross-env typedoc --json doc/api.json --excludeExternals --includeDeclarations --mode modules --target ES6 --name aurelia-fontawesome-docs dist/doc-temp/",
+    "postdoc": "cross-env node doc/shape-doc && rimraf dist/doc-temp",
+    "changelog": "cross-env conventional-changelog -p angular -i doc/CHANGELOG.md -s",
+    "bump-version": "npm --no-git-tag-version version",
+    "release": "standard-version --infile ./doc/CHANGELOG.md",
+    "preprepare-release": "cross-env npm run test",
+    "prepare-release": "cross-env npm run changelog && npm run build && npm run doc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmzagorski/aurelia-fontawesome.git"
+  },
+  "author": "Jeremy Zagorski <jmzagorski@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jmzagorski/aurelia-fontawesome/issues"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "aurelia-fontawesome",
+    "format": "cjs",
+    "directories": {
+      "dist": "dist/commonjs"
+    }
+  },
+  "peerDependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.0-7"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.0-7",
+    "aurelia-framework": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^21.1.10",
+    "@types/node": "^8.10.26",
+    "aurelia-bootstrapper": "^2.3.0",
+    "aurelia-loader-nodejs": "^1.0.1",
+    "aurelia-pal-browser": "^1.8.0",
+    "aurelia-pal-nodejs": "^1.1.1",
+    "aurelia-polyfills": "^1.3.0",
+    "aurelia-testing": "^1.0.0-beta.4.0.0",
+    "concurrently": "^3.6.1",
+    "copyfiles": "^2.0.0",
+    "coveralls": "^3.0.2",
+    "cross-env": "^5.2.0",
+    "husky": "^0.14.3",
+    "jest": "^22.4.4",
+    "jest-css-modules": "^1.1.0",
+    "rimraf": "^2.6.1",
+    "standard-version": "^4.4.0",
+    "ts-jest": "^22.4.6",
+    "tslint": "^5.11.0",
+    "typedoc": "^0.11.1",
+    "typescript": "^3.0.1"
+  },
+  "aurelia": {
+    "import": {
+      "dependencies": [
+        {
+          "name": "aurelia-fontawesome",
+          "main": "aurelia-fontawesome",
+          "path": "../node_modules/aurelia-fontawesome/dist/commonjs",
+          "resources": []
+        }
+      ]
+    }
+  }
+}
