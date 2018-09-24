@@ -90,20 +90,10 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
         this.slot.removeAll();
     }
     compile(abstract) {
-        // FIXME
-        // 1. if i use PAL.DOM (current), PAL is not ready and and viewCompiler.compiler fails
-        // 1. if i use PAL.DOM and run aurelia-pal-browser initialize() in the
-        // configure method (./aurelia-font-awesome.ts) of this plugin i get
-        // BindingLanguage must implement inspectAttribute() and viewcompiler.compile fails
-        // 2. if i use document.createElement i get BindingLanguage must implement inspectAttribute()
-        // and viewCompiler.compiler fails
-        // 3. if i copy and paste this plugin code into an app, the fonts only show if
-        // i use an html view with innerhtml.bind,but see #4
-        // 4. using an actual font-awesome-icon-view and binding to innerhtml results in
-        // Cannot determine default view strategy for object.
-        // 5. tried adding/removing aurelia dependencies and reinstalling node_modules, did not work
-        const $el = convert(DOM.createElement.bind(DOM), abstract);
-        const factory = this.viewCompiler.compile($el, this.resources);
+        const $icon = convert(DOM.createElement.bind(DOM), abstract);
+        const $template = DOM.createElement('template');
+        $template.innerHTML = $icon.outerHTML;
+        const factory = this.viewCompiler.compile($template, this.resources);
         const view = factory.create(this.container, this.bindingContext);
         this.slot.add(view);
         this.slot.bind(this.bindingContext, this.overrideContext);
