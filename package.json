@@ -26,13 +26,10 @@
     "build": "concurrently \"npm run build:amd\" \"npm run build:commonjs\" \"npm run build:es2015\" \"npm run build:es2017\" \"npm run build:native-modules\" \"npm run build:system\"",
     "precommit": "npm run lint",
     "predoc": "cross-env rimraf doc/api.json && rimraf dist/doc-temp && tsc --p tsconfig-build.json --module amd --outFile dist/doc-temp/aurelia-fontawesome.js && node doc/shape-defs && copyfiles tsconfig.json dist/doc-temp",
-    "doc": "cross-env typedoc --json doc/api.json --excludeExternals --includeDeclarations --mode modules --target ES6 --name aurelia-fontawesome-docs dist/doc-temp/",
+    "doc": "cross-env typedoc --json doc/api.json --excludeExternals --includeDeclarations --excludePrivate --excludeProtected --mode modules --target ES6 --name aurelia-fontawesome-docs dist/doc-temp/",
     "postdoc": "cross-env node doc/shape-doc && rimraf dist/doc-temp",
-    "changelog": "cross-env conventional-changelog -p angular -i doc/CHANGELOG.md -s",
-    "bump-version": "npm --no-git-tag-version version",
-    "release": "standard-version --infile ./doc/CHANGELOG.md",
-    "preprepare-release": "cross-env npm run test",
-    "prepare-release": "cross-env npm run changelog && npm run build && npm run doc"
+    "prerelease": "npm run test && npm run build",
+    "release": "standard-version --infile ./doc/CHANGELOG.md"
   },
   "repository": {
     "type": "git",

@@ -39,16 +39,40 @@ define(["require", "exports", "aurelia-framework", "@fortawesome/fontawesome-svg
             this.container = container;
             this.viewCompiler = viewCompiler;
             this.resources = resources;
+            /**
+             * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
+             */
             this.border = false;
+            /**
+             * Your own class name that will be added to the SVGElement
+             */
             this.className = '';
+            /**
+             * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
+             */
             this.fixedWidth = false;
             this.inverse = false;
+            /**
+             * {@link https://fontawesome.com/how-to-use/on-the-web/styling/icons-in-a-list}
+             */
             this.listItem = false;
+            /**
+             * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
+             */
             this.pulse = false;
+            /**
+             * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
+             */
             this.spin = false;
             this.style = {};
+            /**
+             * {@link https://fontawesome.com/how-to-use/on-the-web/advanced/svg-symbols}
+             */
             this.symbol = false;
             this.title = '';
+            /**
+             * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
+             */
             this.transform = '';
             this.classes = {};
             this.logger = aurelia_framework_1.LogManager.getLogger('aurelia-fontawesome');
