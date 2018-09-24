@@ -51,29 +51,61 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
 export class FontAwesomeIconCustomElement {
   public static inject() { return [Element, Container, ViewCompiler, ViewResources]; }
 
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
+   */
   @bindable public border: boolean = false;
+  /**
+   * Your own class name that will be added to the SVGElement
+   */
   @bindable public className: string = '';
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
+   */
   @bindable public fixedWidth: boolean = false;
   @bindable public flip: 'horizontal' | 'vertical' | 'both';
   @bindable public icon: BoundIconArg;
   @bindable public inverse: boolean = false;
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/icons-in-a-list}
+   */
   @bindable public listItem: boolean = false;
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/masking}
+   */
   @bindable public mask?: BoundIconArg;
   @bindable public pull: 'right' | 'left';
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
+   */
   @bindable public pulse: boolean = false;
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/rotating-icons}
+   */
   @bindable public rotation?: 90 | 180 | 270;
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons}
+   */
   @bindable public size?: 'lg' |'xs' |'sm' |'1x' |'2x' |'3x' |'4x' |'5x' |'6x' |'7x' |'8x' |'9x' |'10x';
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
+   */
   @bindable public spin: boolean = false;
   @bindable public style: any = {};
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/advanced/svg-symbols}
+   */
   @bindable public symbol: boolean | string = false;
   @bindable public title: string = '';
+  /**
+   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
+   */
   @bindable public transform: string | Transform = '';
 
-  public bindingContext: any;
-  public overrideContext: OverrideContext;
-  public classes: any = {};
-  public slot: ViewSlot;
-
+  private bindingContext: any;
+  private overrideContext: OverrideContext;
+  private classes: any = {};
+  private slot: ViewSlot;
   private logger = LogManager.getLogger('aurelia-fontawesome');
 
   public constructor(private $element: Element,
