@@ -44,7 +44,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
     /* Assert */
     expect($svg).toBeTruthy();
@@ -53,7 +53,7 @@ describe('the font awesome icon custom element', () => {
     expect($svg.className).not.toContain('fa-flip');
     expect($svg.classList).not.toContain('fa-inverse');
     expect($svg.classList).not.toContain('fa-li');
-    expect($svg.querySelector('clippath')).toBeFalsy();
+    expect($svg.querySelector('clipPath')).toBeFalsy();
     expect($svg.className).not.toContain('fa-pull');
     expect($svg.classList).not.toContain('fa-pulse');
     expect($svg.className).not.toContain('fa-rotate-');
@@ -73,7 +73,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg).toBeTruthy();
@@ -135,7 +135,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
     /* Assert */
     expect($svg.classList).toContain('fa-border');
@@ -148,7 +148,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
     /* Assert */
     expect($svg.classList).toContain('fa-fw');
@@ -161,7 +161,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
     /* Assert */
     expect($svg.classList).toContain('fa-inverse');
@@ -175,7 +175,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.classList).toContain('foo');
@@ -191,7 +191,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.getAttribute('style')).toEqual('background: red;');
@@ -204,7 +204,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.getAttribute('rel')).toEqual('local');
@@ -223,7 +223,7 @@ describe('the font awesome icon custom element', () => {
 
         /* Act */
         await component.create(bootstrap);
-        const $svg = document.querySelector('svg') as SVGSVGElement;
+        const $svg = document.querySelector('svg') as Element;
 
         /* Assert */
         expect($svg.classList).toContain(rec.className);
@@ -237,7 +237,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.classList).toContain('fa-flip-vertical');
@@ -252,7 +252,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
     /* Assert */
     expect($svg.classList).toContain('fa-li');
@@ -267,7 +267,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.classList).toContain('fa-pull-' + pull);
@@ -281,7 +281,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
     /* Assert */
     expect($svg.classList).toContain('fa-pulse');
@@ -296,7 +296,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.classList).toContain('fa-rotate-' + rotation);
@@ -310,7 +310,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
     /* Assert */
     expect($svg.classList).toContain('fa-spin');
@@ -325,7 +325,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.classList).toContain('fa-' + size);
@@ -341,7 +341,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.getAttribute('style')).toEqual('transform-origin: 0.375em 0.5em;');
@@ -356,7 +356,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
 
       /* Assert */
       expect($svg.getAttribute('style')).toEqual('transform-origin: 0.375em 0.5em;');
@@ -368,15 +368,15 @@ describe('the font awesome icon custom element', () => {
     [ 'fas', 'circle' ],
     'circle'
   ].forEach(mask => {
-    it('accepts an mask definition, string or array', async done => {
+    it('accepts a mask definition, string or array', async done => {
       /* Arrange */
       component.inView('<font-awesome-icon icon="coffee" mask.bind="mask"></font-awesome-icon>')
         .boundTo({ mask });
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as SVGSVGElement;
-      const $clipPath = $svg.querySelector('clippath') as SVGSVGElement;
+      const $svg = document.querySelector('svg') as Element;
+      const $clipPath = $svg.querySelector('clipPath') as Element;
 
       /* Assert */
       expect($clipPath).toBeTruthy();
@@ -424,9 +424,9 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as SVGSVGElement;
+    const $svg = document.querySelector('svg') as Element;
 
-    expect($svg.children[0].tagName).toEqual('TITLE');
+    expect($svg.children[0].tagName).toEqual('title');
     expect($svg.children[0].textContent).toEqual('foobar');
     done();
   });
