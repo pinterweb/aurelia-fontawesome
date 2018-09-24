@@ -34,7 +34,7 @@ $ npm i --save @fortawesome/free-brands-svg-icons
 
 **Aurelia Plugin**
 ```
-$ npm i --save jmzagorski/aurelia-fontawesome
+$ npm i --save aurelia-fontawesome
 ```
 
 ## Usage
