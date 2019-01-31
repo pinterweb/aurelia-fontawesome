@@ -82,7 +82,8 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
             'fa-spin': this.spin,
             [`fa-${this.size}`]: !!this.size,
             [`fa-pull-${this.pull}`]: !!this.pull,
-            [`fa-rotate-${this.rotation}`]: !!this.rotation
+            [`fa-rotate-${this.rotation}`]: !!this.rotation,
+            [`fa-stack-${this.stack}`]: !!this.stack
         };
     }
     attached() {
@@ -193,6 +194,9 @@ __decorate([
 __decorate([
     bindable
 ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
+__decorate([
+    bindable
+], FontAwesomeIconCustomElement.prototype, "stack", void 0);
 FontAwesomeIconCustomElement = __decorate([
     customElement('font-awesome-icon'),
     noView()
