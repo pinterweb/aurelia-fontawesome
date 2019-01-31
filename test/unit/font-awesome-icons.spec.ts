@@ -130,43 +130,49 @@ describe('the font awesome icon custom element', () => {
     });
   });
 
-  it('uses a border', async done => {
-    /* Arrange */
-    component.inView('<font-awesome-icon icon="coffee" border.bind="true"></font-awesome-icon>');
+  ['', '.bind'].forEach(bind => {
+    it('uses a border', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" border${bind}="true"></font-awesome-icon>`);
 
-    /* Act */
-    await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
 
-    /* Assert */
-    expect($svg.classList).toContain('fa-border');
-    done();
+      /* Assert */
+      expect($svg.classList).toContain('fa-border');
+      done();
+    });
   });
 
-  it('uses a fixed width', async done => {
-    /* Arrange */
-    component.inView('<font-awesome-icon icon="coffee" fixed-width.bind="true"></font-awesome-icon>');
+  ['', '.bind'].forEach(bind => {
+    it('uses a fixed width', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" fixed-width${bind}="true"></font-awesome-icon>`);
 
-    /* Act */
-    await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
 
-    /* Assert */
-    expect($svg.classList).toContain('fa-fw');
-    done();
+      /* Assert */
+      expect($svg.classList).toContain('fa-fw');
+      done();
+    });
   });
 
-  it('uses a inverse', async done => {
-    /* Arrange */
-    component.inView('<font-awesome-icon icon="coffee" inverse.bind="true"></font-awesome-icon>');
+  ['', '.bind'].forEach(bind => {
+    it('uses a inverse', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" inverse${bind}="true"></font-awesome-icon>`);
 
-    /* Act */
-    await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
 
-    /* Assert */
-    expect($svg.classList).toContain('fa-inverse');
-    done();
+      /* Assert */
+      expect($svg.classList).toContain('fa-inverse');
+      done();
+    });
   });
 
   describe('extra element data', () => {
@@ -247,17 +253,19 @@ describe('the font awesome icon custom element', () => {
     });
   });
 
-  it('adds list item', async done => {
-    /* Arrange */
-    component.inView(`<font-awesome-icon icon="coffee" list-item.bind="true"></font-awesome-icon>`);
+  ['', '.bind'].forEach(bind => {
+    it('adds list item', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" list-item${bind}="true"></font-awesome-icon>`);
 
-    /* Act */
-    await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
 
-    /* Assert */
-    expect($svg.classList).toContain('fa-li');
-    done();
+      /* Assert */
+      expect($svg.classList).toContain('fa-li');
+      done();
+    });
   });
 
   [ 'right', 'left' ].forEach(pull => {
@@ -276,20 +284,22 @@ describe('the font awesome icon custom element', () => {
     });
   });
 
-  it('uses pulse', async done => {
-    /* Arrange */
-    component.inView(`<font-awesome-icon icon="coffee" pulse.bind="true"></font-awesome-icon>`);
+  ['', '.bind'].forEach(bind => {
+    it('uses pulse', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" pulse${bind}="true"></font-awesome-icon>`);
 
-    /* Act */
-    await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
 
-    /* Assert */
-    expect($svg.classList).toContain('fa-pulse');
-    done();
+      /* Assert */
+      expect($svg.classList).toContain('fa-pulse');
+      done();
+    });
   });
 
-  [ '90', '180', '270' ].forEach(rotation => {
+  [ 90, 180, 270, '90', '180', '270' ].forEach(rotation => {
     it('uses rotation', async done => {
       /* Arrange */
       component.inView(`<font-awesome-icon icon="coffee" rotation.bind="rotation"></font-awesome-icon>`)
@@ -305,17 +315,19 @@ describe('the font awesome icon custom element', () => {
     });
   });
 
-  it('uses spin', async done => {
-    /* Arrange */
-    component.inView(`<font-awesome-icon icon="coffee" spin.bind="true"></font-awesome-icon>`);
+  ['', '.bind'].forEach(bind => {
+    it('uses spin', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" spin${bind}="true"></font-awesome-icon>`);
 
-    /* Act */
-    await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
 
-    /* Assert */
-    expect($svg.classList).toContain('fa-spin');
-    done();
+      /* Assert */
+      expect($svg.classList).toContain('fa-spin');
+      done();
+    });
   });
 
   [ 'lg', 'xs', 'sm', '1x', '2x', '3x', '4x', '5x', '6x', '7x', '8x', '9x', '10x' ].forEach(size => {
