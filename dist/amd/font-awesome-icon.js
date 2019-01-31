@@ -95,7 +95,6 @@ define(["require", "exports", "aurelia-framework", "@fortawesome/fontawesome-svg
                 _a["fa-" + this.size] = !!this.size,
                 _a["fa-pull-" + this.pull] = !!this.pull,
                 _a["fa-rotate-" + this.rotation] = !!this.rotation,
-                _a["fa-stack-" + this.stack] = !!this.stack,
                 _a);
         };
         FontAwesomeIconCustomElement.prototype.attached = function () {
@@ -203,9 +202,6 @@ define(["require", "exports", "aurelia-framework", "@fortawesome/fontawesome-svg
         __decorate([
             aurelia_framework_1.bindable
         ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
-        __decorate([
-            aurelia_framework_1.bindable
-        ], FontAwesomeIconCustomElement.prototype, "stack", void 0);
         FontAwesomeIconCustomElement = __decorate([
             aurelia_framework_1.customElement('font-awesome-icon'),
             aurelia_framework_1.noView()

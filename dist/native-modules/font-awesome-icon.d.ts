@@ -60,10 +60,6 @@ export declare class FontAwesomeIconCustomElement {
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
      */
     transform: string | Transform;
-    /**
-     * {@link https://fontawesome.com/how-to-use/on-the-web/styling/stacking-icons}
-     */
-    stack?: '1x' | '2x';
     private bindingContext;
     private overrideContext;
     private classes;
