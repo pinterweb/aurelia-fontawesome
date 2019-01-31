@@ -101,10 +101,6 @@ export class FontAwesomeIconCustomElement {
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
    */
   @bindable public transform: string | Transform = '';
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/stacking-icons}
-   */
-  @bindable public stack?: '1x' | '2x';
 
   private bindingContext: any;
   private overrideContext: OverrideContext;
@@ -132,8 +128,7 @@ export class FontAwesomeIconCustomElement {
       'fa-spin': this.spin.toString() === 'true',
       [`fa-${this.size}`]: !!this.size,
       [`fa-pull-${this.pull}`]: !!this.pull,
-      [`fa-rotate-${this.rotation}`]: !!this.rotation,
-      [`fa-stack-${this.stack}`]: !!this.stack
+      [`fa-rotate-${this.rotation}`]: !!this.rotation
     };
   }
 
