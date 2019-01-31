@@ -54,7 +54,7 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
    */
-  @bindable public border: boolean = false;
+  @bindable public border: boolean | 'true' | 'false' = false;
   /**
    * Your own class name that will be added to the SVGElement
    */
@@ -62,14 +62,14 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
    */
-  @bindable public fixedWidth: boolean = false;
+  @bindable public fixedWidth: boolean | 'true' | 'false' = false;
   @bindable public flip: 'horizontal' | 'vertical' | 'both';
   @bindable public icon: BoundIconArg;
-  @bindable public inverse: boolean = false;
+  @bindable public inverse: boolean | 'true' | 'false' = false;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/icons-in-a-list}
    */
-  @bindable public listItem: boolean = false;
+  @bindable public listItem: boolean | 'true' | 'false' = false;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/masking}
    */
@@ -78,11 +78,11 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
    */
-  @bindable public pulse: boolean = false;
+  @bindable public pulse: boolean | 'true' | 'false' = false;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/rotating-icons}
    */
-  @bindable public rotation?: 90 | 180 | 270;
+  @bindable public rotation?: 90 | 180 | 270 | '90' | '180' | '270';
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons}
    */
@@ -90,7 +90,7 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
    */
-  @bindable public spin: boolean = false;
+  @bindable public spin: boolean | 'true' | 'false' = false;
   @bindable public style: any = {};
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/advanced/svg-symbols}
@@ -118,14 +118,14 @@ export class FontAwesomeIconCustomElement {
     this.overrideContext = createOverrideContext(bindingContext, overrideContext);
 
     this.classes = {
-      'fa-border': this.border,
+      'fa-border': this.border.toString() === 'true',
       'fa-flip-horizontal': this.flip === 'horizontal' || this.flip === 'both',
       'fa-flip-vertical': this.flip === 'vertical' || this.flip === 'both',
-      'fa-fw': this.fixedWidth,
-      'fa-inverse': this.inverse,
-      'fa-li': this.listItem,
-      'fa-pulse': this.pulse,
-      'fa-spin': this.spin,
+      'fa-fw': this.fixedWidth.toString() === 'true',
+      'fa-inverse': this.inverse.toString() === 'true',
+      'fa-li': this.listItem.toString() === 'true',
+      'fa-pulse': this.pulse.toString() === 'true',
+      'fa-spin': this.spin.toString() === 'true',
       [`fa-${this.size}`]: !!this.size,
       [`fa-pull-${this.pull}`]: !!this.pull,
       [`fa-rotate-${this.rotation}`]: !!this.rotation
