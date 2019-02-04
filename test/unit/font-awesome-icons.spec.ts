@@ -58,6 +58,7 @@ describe('the font awesome icon custom element', () => {
     expect($svg.classList).not.toContain('fa-pulse');
     expect($svg.className).not.toContain('fa-rotate-');
     expect($svg.className).not.toContain('fa-spin');
+    expect($svg.className).not.toContain('fa-stack-');
     expect($svg.querySelector('title')).toBeFalsy();
     done();
   });
@@ -380,6 +381,22 @@ describe('the font awesome icon custom element', () => {
 
       /* Assert */
       expect($clipPath).toBeTruthy();
+      done();
+    });
+  });
+
+  [ '1x', '2x' ].forEach(stack => {
+    it('stacks', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" stack.bind="stack"></font-awesome-icon>`)
+        .boundTo({ stack });
+
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
+
+      /* Assert */
+      expect($svg.classList).toContain('fa-stack-' + stack);
       done();
     });
   });
