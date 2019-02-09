@@ -25,6 +25,11 @@ import { objectWithKey } from './utils';
 import convert from './converter';
 
 type BoundIconArg = IconDefinition | IconName | Array<IconName | IconPrefix>;
+type PullArg = 'right' | 'left';
+type RotationArg = 90 | 180 | 270;
+type FlipArg = 'horizontal' | 'vertical' | 'both';
+type SizeArg = 'lg' | 'xs' | 'sm' | '1x' | '2x' | '3x' | '4x' | '5x' | '6x' | '7x' | '8x' | '9x' | '10x';
+type StackArg = '1x' | '2x';
 
 function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | null {
   if (icon == null) {
@@ -63,8 +68,8 @@ export class FontAwesomeIconCustomElement {
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
    */
   @bindable public fixedWidth: boolean = false;
-  @bindable public flip: 'horizontal' | 'vertical' | 'both';
-  @bindable public icon: BoundIconArg;
+  @bindable public flip: FlipArg;
+  @bindable({ changeHandler: 'replaceIcon' }) public icon: BoundIconArg;
   @bindable public inverse: boolean = false;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/icons-in-a-list}
@@ -73,8 +78,8 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/masking}
    */
-  @bindable public mask?: BoundIconArg;
-  @bindable public pull: 'right' | 'left';
+  @bindable({ changeHandler: 'replaceIcon' }) public mask?: BoundIconArg;
+  @bindable public pull: PullArg;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
    */
@@ -82,29 +87,29 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/rotating-icons}
    */
-  @bindable public rotation?: 90 | 180 | 270;
+  @bindable public rotation?: RotationArg;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons}
    */
-  @bindable public size?: 'lg' |'xs' |'sm' |'1x' |'2x' |'3x' |'4x' |'5x' |'6x' |'7x' |'8x' |'9x' |'10x';
+  @bindable public size?: SizeArg;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
    */
   @bindable public spin: boolean = false;
-  @bindable public style: any = {};
+  @bindable({ changeHandler: 'replaceIcon' }) public style: any = {};
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/advanced/svg-symbols}
    */
-  @bindable public symbol: boolean | string = false;
-  @bindable public title: string = '';
+  @bindable({ changeHandler: 'replaceIcon' }) public symbol: boolean | string = false;
+  @bindable({ changeHandler: 'replaceIcon' }) public title: string = '';
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
    */
-  @bindable public transform: string | Transform = '';
+  @bindable({ changeHandler: 'replaceIcon' }) public transform: string | Transform = '';
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/stacking-icons}
    */
-  @bindable public stack?: '1x' | '2x';
+  @bindable public stack?: StackArg;
 
   private bindingContext: any;
   private overrideContext: OverrideContext;
@@ -181,6 +186,73 @@ export class FontAwesomeIconCustomElement {
     this.slot.detached();
     this.slot.unbind();
     this.slot.removeAll();
+  }
+
+  protected replaceIcon() {
+    this.detached();
+    this.attached();
+  }
+
+  protected borderChanged(value?: boolean) {
+    this.cleanAndSetClass(value && 'fa-border', 'fa-border');
+  }
+
+  protected flipChanged(value?: FlipArg) {
+    this.cleanAndSetClass((value === 'horizontal' || value === 'both') && 'fa-flip-horizontal', 'fa-flip-horizontal');
+    this.cleanAndSetClass((value === 'vertical' || value === 'both') && 'fa-flip-vertical', 'fa-flip-vertical');
+  }
+
+  protected fixedWidthChanged(value?: boolean) {
+    this.cleanAndSetClass(value && 'fa-fw', 'fa-fw');
+  }
+
+  protected inverseChanged(value?: boolean) {
+    this.cleanAndSetClass(value && 'fa-inverse', 'fa-inverse');
+  }
+
+  protected listItemChanged(value?: boolean) {
+    this.cleanAndSetClass(value && 'fa-li', 'fa-li');
+  }
+
+  protected pulseChanged(value?: boolean) {
+    this.cleanAndSetClass(value && 'fa-pulse', 'fa-pulse');
+  }
+
+  protected spinChanged(value?: boolean) {
+    this.cleanAndSetClass(value && 'fa-spin', 'fa-spin');
+  }
+
+  protected sizeChanged(newValue?: SizeArg, oldValue?: SizeArg) {
+    this.cleanAndSetClass(newValue && `fa-${newValue}`, oldValue && `fa-${oldValue}`);
+  }
+
+  protected pullChanged(newValue?: PullArg, oldValue?: PullArg) {
+    this.cleanAndSetClass(newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
+  }
+
+  protected rotationChanged(newValue?: RotationArg, oldValue?: RotationArg) {
+    this.cleanAndSetClass(newValue && `fa-rotate-${newValue}`, oldValue && `fa-rotate-${oldValue}`);
+  }
+
+  protected stackChanged(newValue?: StackArg, oldValue?: StackArg) {
+    this.cleanAndSetClass(newValue && `fa-stack-${newValue}`, oldValue && `fa-stack-${oldValue}`);
+  }
+
+  private cleanAndSetClass(newClass?: false | string, cleanClass?: string) {
+    const svgElement = this.$element.querySelector('svg');
+
+    if (!svgElement) {
+      this.logger.error('Unable to find svg element');
+      return;
+    }
+
+    if (cleanClass && newClass !== cleanClass && svgElement.classList.contains(cleanClass)) {
+      svgElement.classList.remove(cleanClass);
+    }
+
+    if (newClass) {
+      svgElement.classList.add(newClass);
+    }
   }
 
   protected compile(abstract: AbstractElement): void {
