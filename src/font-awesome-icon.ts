@@ -1,14 +1,4 @@
 import {
-  AbstractElement,
-  IconDefinition,
-  IconLookup,
-  IconName,
-  IconPrefix,
-  Transform,
-  icon,
-  parse
-} from '@fortawesome/fontawesome-svg-core';
-import {
   Container,
   DOM,
   LogManager,
@@ -21,9 +11,18 @@ import {
   customElement,
   noView
 } from 'aurelia-framework';
-
-import convert from './converter';
+import {
+  AbstractElement,
+  IconDefinition,
+  IconLookup,
+  IconName,
+  IconPrefix,
+  Transform,
+  icon,
+  parse
+} from '@fortawesome/fontawesome-svg-core';
 import { objectWithKey } from './utils';
+import convert from './converter';
 
 type BoundIconArg = IconDefinition | IconName | Array<IconName | IconPrefix>;
 type PullArg = 'right' | 'left';
@@ -119,9 +118,9 @@ export class FontAwesomeIconCustomElement {
   private logger = LogManager.getLogger('aurelia-fontawesome');
 
   public constructor(private $element: Element,
-    private container: Container,
-    private viewCompiler: ViewCompiler,
-    private resources: ViewResources) { }
+                     private container: Container,
+                     private viewCompiler: ViewCompiler,
+                     private resources: ViewResources) { }
 
   public bind(bindingContext: any, overrideContext: OverrideContext) {
     this.bindingContext = bindingContext;
@@ -275,13 +274,13 @@ export class FontAwesomeIconCustomElement {
   private getOtherAttributes() {
     const attrs = this.$element.attributes;
     const otherAttrs: any = {};
-    const ignore = ['class', 'style'];
+    const ignore = [ 'class', 'style' ];
 
     for (let i = attrs.length - 1; i >= 0; i--) {
       if (attrs[i].name.indexOf('au-') === -1 &&
-        ignore.indexOf(attrs[i].name) === -1 &&
-        attrs[i].name.indexOf('.') === -1 &&
-        !(attrs[i].name in this)) {
+          ignore.indexOf(attrs[i].name) === -1 &&
+          attrs[i].name.indexOf('.') === -1 &&
+          !(attrs[i].name in this)) {
         otherAttrs[attrs[i].name] = attrs[i].value;
       }
     }

@@ -17,10 +17,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var fontawesome_svg_core_1 = require("@fortawesome/fontawesome-svg-core");
 var aurelia_framework_1 = require("aurelia-framework");
-var converter_1 = require("./converter");
+var fontawesome_svg_core_1 = require("@fortawesome/fontawesome-svg-core");
 var utils_1 = require("./utils");
+var converter_1 = require("./converter");
 function normalizeIconArgs(icon) {
     if (icon == null) {
         return null;
@@ -98,7 +98,6 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
             _a["fa-" + this.size] = !!this.size,
             _a["fa-pull-" + this.pull] = !!this.pull,
             _a["fa-rotate-" + this.rotation] = !!this.rotation,
-            _a["fa-stack-" + this.stack] = !!this.stack,
             _a);
     };
     FontAwesomeIconCustomElement.prototype.attached = function () {
@@ -126,57 +125,6 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
         this.slot.detached();
         this.slot.unbind();
         this.slot.removeAll();
-    };
-    FontAwesomeIconCustomElement.prototype.replaceIcon = function () {
-        this.detached();
-        this.attached();
-    };
-    FontAwesomeIconCustomElement.prototype.borderChanged = function (value) {
-        this.cleanAndSetClass(value && 'fa-border', 'fa-border');
-    };
-    FontAwesomeIconCustomElement.prototype.flipChanged = function (value) {
-        this.cleanAndSetClass((value === 'horizontal' || value === 'both') && 'fa-flip-horizontal', 'fa-flip-horizontal');
-        this.cleanAndSetClass((value === 'vertical' || value === 'both') && 'fa-flip-vertical', 'fa-flip-vertical');
-    };
-    FontAwesomeIconCustomElement.prototype.fixedWidthChanged = function (value) {
-        this.cleanAndSetClass(value && 'fa-fw', 'fa-fw');
-    };
-    FontAwesomeIconCustomElement.prototype.inverseChanged = function (value) {
-        this.cleanAndSetClass(value && 'fa-inverse', 'fa-inverse');
-    };
-    FontAwesomeIconCustomElement.prototype.listItemChanged = function (value) {
-        this.cleanAndSetClass(value && 'fa-li', 'fa-li');
-    };
-    FontAwesomeIconCustomElement.prototype.pulseChanged = function (value) {
-        this.cleanAndSetClass(value && 'fa-pulse', 'fa-pulse');
-    };
-    FontAwesomeIconCustomElement.prototype.spinChanged = function (value) {
-        this.cleanAndSetClass(value && 'fa-spin', 'fa-spin');
-    };
-    FontAwesomeIconCustomElement.prototype.sizeChanged = function (newValue, oldValue) {
-        this.cleanAndSetClass(newValue && "fa-" + newValue, oldValue && "fa-" + oldValue);
-    };
-    FontAwesomeIconCustomElement.prototype.pullChanged = function (newValue, oldValue) {
-        this.cleanAndSetClass(newValue && "fa-pull-" + newValue, oldValue && "fa-pull-" + oldValue);
-    };
-    FontAwesomeIconCustomElement.prototype.rotationChanged = function (newValue, oldValue) {
-        this.cleanAndSetClass(newValue && "fa-rotate-" + newValue, oldValue && "fa-rotate-" + oldValue);
-    };
-    FontAwesomeIconCustomElement.prototype.stackChanged = function (newValue, oldValue) {
-        this.cleanAndSetClass(newValue && "fa-stack-" + newValue, oldValue && "fa-stack-" + oldValue);
-    };
-    FontAwesomeIconCustomElement.prototype.cleanAndSetClass = function (newClass, cleanClass) {
-        var svgElement = this.$element.querySelector('svg');
-        if (!svgElement) {
-            this.logger.error('Unable to find svg element');
-            return;
-        }
-        if (cleanClass && newClass !== cleanClass && svgElement.classList.contains(cleanClass)) {
-            svgElement.classList.remove(cleanClass);
-        }
-        if (newClass) {
-            svgElement.classList.add(newClass);
-        }
     };
     FontAwesomeIconCustomElement.prototype.compile = function (abstract) {
         var $icon = converter_1.default(aurelia_framework_1.DOM.createElement.bind(aurelia_framework_1.DOM), abstract);
@@ -219,7 +167,7 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "flip", void 0);
     __decorate([
-        aurelia_framework_1.bindable({ changeHandler: 'replaceIcon' })
+        aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "icon", void 0);
     __decorate([
         aurelia_framework_1.bindable
@@ -228,7 +176,7 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "listItem", void 0);
     __decorate([
-        aurelia_framework_1.bindable({ changeHandler: 'replaceIcon' })
+        aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "mask", void 0);
     __decorate([
         aurelia_framework_1.bindable
@@ -246,20 +194,17 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
         aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "spin", void 0);
     __decorate([
-        aurelia_framework_1.bindable({ changeHandler: 'replaceIcon' })
+        aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "style", void 0);
     __decorate([
-        aurelia_framework_1.bindable({ changeHandler: 'replaceIcon' })
+        aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "symbol", void 0);
     __decorate([
-        aurelia_framework_1.bindable({ changeHandler: 'replaceIcon' })
+        aurelia_framework_1.bindable
     ], FontAwesomeIconCustomElement.prototype, "title", void 0);
     __decorate([
-        aurelia_framework_1.bindable({ changeHandler: 'replaceIcon' })
-    ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
-    __decorate([
         aurelia_framework_1.bindable
-    ], FontAwesomeIconCustomElement.prototype, "stack", void 0);
+    ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
     FontAwesomeIconCustomElement = __decorate([
         aurelia_framework_1.customElement('font-awesome-icon'),
         aurelia_framework_1.noView()
