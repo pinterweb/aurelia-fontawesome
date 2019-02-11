@@ -1,6 +1,11 @@
-import { Container, OverrideContext, ViewCompiler, ViewResources } from 'aurelia-framework';
 import { AbstractElement, IconDefinition, IconName, IconPrefix, Transform } from '@fortawesome/fontawesome-svg-core';
+import { Container, OverrideContext, ViewCompiler, ViewResources } from 'aurelia-framework';
 declare type BoundIconArg = IconDefinition | IconName | Array<IconName | IconPrefix>;
+declare type PullArg = 'right' | 'left';
+declare type RotationArg = 90 | 180 | 270;
+declare type FlipArg = 'horizontal' | 'vertical' | 'both';
+declare type SizeArg = 'lg' | 'xs' | 'sm' | '1x' | '2x' | '3x' | '4x' | '5x' | '6x' | '7x' | '8x' | '9x' | '10x';
+declare type StackArg = '1x' | '2x';
 export declare class FontAwesomeIconCustomElement {
     private $element;
     private container;
@@ -22,7 +27,7 @@ export declare class FontAwesomeIconCustomElement {
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
      */
     fixedWidth: boolean;
-    flip: 'horizontal' | 'vertical' | 'both';
+    flip: FlipArg;
     icon: BoundIconArg;
     inverse: boolean;
     /**
@@ -33,7 +38,7 @@ export declare class FontAwesomeIconCustomElement {
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/masking}
      */
     mask?: BoundIconArg;
-    pull: 'right' | 'left';
+    pull: PullArg;
     /**
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
      */
@@ -41,11 +46,11 @@ export declare class FontAwesomeIconCustomElement {
     /**
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/rotating-icons}
      */
-    rotation?: 90 | 180 | 270;
+    rotation?: RotationArg;
     /**
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons}
      */
-    size?: 'lg' | 'xs' | 'sm' | '1x' | '2x' | '3x' | '4x' | '5x' | '6x' | '7x' | '8x' | '9x' | '10x';
+    size?: SizeArg;
     /**
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
      */
@@ -60,6 +65,10 @@ export declare class FontAwesomeIconCustomElement {
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
      */
     transform: string | Transform;
+    /**
+     * {@link https://fontawesome.com/how-to-use/on-the-web/styling/stacking-icons}
+     */
+    stack?: StackArg;
     private bindingContext;
     private overrideContext;
     private classes;
@@ -69,6 +78,19 @@ export declare class FontAwesomeIconCustomElement {
     bind(bindingContext: any, overrideContext: OverrideContext): void;
     attached(): void;
     detached(): void;
+    protected replaceIcon(): void;
+    protected borderChanged(value?: boolean): void;
+    protected flipChanged(value?: FlipArg): void;
+    protected fixedWidthChanged(value?: boolean): void;
+    protected inverseChanged(value?: boolean): void;
+    protected listItemChanged(value?: boolean): void;
+    protected pulseChanged(value?: boolean): void;
+    protected spinChanged(value?: boolean): void;
+    protected sizeChanged(newValue?: SizeArg, oldValue?: SizeArg): void;
+    protected pullChanged(newValue?: PullArg, oldValue?: PullArg): void;
+    protected rotationChanged(newValue?: RotationArg, oldValue?: RotationArg): void;
+    protected stackChanged(newValue?: StackArg, oldValue?: StackArg): void;
+    private cleanAndSetClass;
     protected compile(abstract: AbstractElement): void;
     /**
      * Get all non aurelia and non bound attributes and pass it to the

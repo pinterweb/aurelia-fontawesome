@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Container, DOM, LogManager, ViewCompiler, ViewResources, ViewSlot, bindable, createOverrideContext, customElement, noView } from 'aurelia-framework';
 import { icon, parse } from '@fortawesome/fontawesome-svg-core';
-import { objectWithKey } from './utils';
+import { Container, DOM, LogManager, ViewCompiler, ViewResources, ViewSlot, bindable, createOverrideContext, customElement, noView } from 'aurelia-framework';
 import convert from './converter';
+import { objectWithKey } from './utils';
 function normalizeIconArgs(icon) {
     if (icon == null) {
         return null;
@@ -82,7 +82,8 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
             'fa-spin': this.spin,
             [`fa-${this.size}`]: !!this.size,
             [`fa-pull-${this.pull}`]: !!this.pull,
-            [`fa-rotate-${this.rotation}`]: !!this.rotation
+            [`fa-rotate-${this.rotation}`]: !!this.rotation,
+            [`fa-stack-${this.stack}`]: !!this.stack
         };
     }
     attached() {
@@ -112,6 +113,57 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
         this.slot.detached();
         this.slot.unbind();
         this.slot.removeAll();
+    }
+    replaceIcon() {
+        this.detached();
+        this.attached();
+    }
+    borderChanged(value) {
+        this.cleanAndSetClass(value && 'fa-border', 'fa-border');
+    }
+    flipChanged(value) {
+        this.cleanAndSetClass((value === 'horizontal' || value === 'both') && 'fa-flip-horizontal', 'fa-flip-horizontal');
+        this.cleanAndSetClass((value === 'vertical' || value === 'both') && 'fa-flip-vertical', 'fa-flip-vertical');
+    }
+    fixedWidthChanged(value) {
+        this.cleanAndSetClass(value && 'fa-fw', 'fa-fw');
+    }
+    inverseChanged(value) {
+        this.cleanAndSetClass(value && 'fa-inverse', 'fa-inverse');
+    }
+    listItemChanged(value) {
+        this.cleanAndSetClass(value && 'fa-li', 'fa-li');
+    }
+    pulseChanged(value) {
+        this.cleanAndSetClass(value && 'fa-pulse', 'fa-pulse');
+    }
+    spinChanged(value) {
+        this.cleanAndSetClass(value && 'fa-spin', 'fa-spin');
+    }
+    sizeChanged(newValue, oldValue) {
+        this.cleanAndSetClass(newValue && `fa-${newValue}`, oldValue && `fa-${oldValue}`);
+    }
+    pullChanged(newValue, oldValue) {
+        this.cleanAndSetClass(newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
+    }
+    rotationChanged(newValue, oldValue) {
+        this.cleanAndSetClass(newValue && `fa-rotate-${newValue}`, oldValue && `fa-rotate-${oldValue}`);
+    }
+    stackChanged(newValue, oldValue) {
+        this.cleanAndSetClass(newValue && `fa-stack-${newValue}`, oldValue && `fa-stack-${oldValue}`);
+    }
+    cleanAndSetClass(newClass, cleanClass) {
+        const svgElement = this.$element.querySelector('svg');
+        if (!svgElement) {
+            this.logger.error('Unable to find svg element');
+            return;
+        }
+        if (cleanClass && newClass !== cleanClass && svgElement.classList.contains(cleanClass)) {
+            svgElement.classList.remove(cleanClass);
+        }
+        if (newClass) {
+            svgElement.classList.add(newClass);
+        }
     }
     compile(abstract) {
         const $icon = convert(DOM.createElement.bind(DOM), abstract);
@@ -155,7 +207,7 @@ __decorate([
     bindable
 ], FontAwesomeIconCustomElement.prototype, "flip", void 0);
 __decorate([
-    bindable
+    bindable({ changeHandler: 'replaceIcon' })
 ], FontAwesomeIconCustomElement.prototype, "icon", void 0);
 __decorate([
     bindable
@@ -164,7 +216,7 @@ __decorate([
     bindable
 ], FontAwesomeIconCustomElement.prototype, "listItem", void 0);
 __decorate([
-    bindable
+    bindable({ changeHandler: 'replaceIcon' })
 ], FontAwesomeIconCustomElement.prototype, "mask", void 0);
 __decorate([
     bindable
@@ -182,17 +234,20 @@ __decorate([
     bindable
 ], FontAwesomeIconCustomElement.prototype, "spin", void 0);
 __decorate([
-    bindable
+    bindable({ changeHandler: 'replaceIcon' })
 ], FontAwesomeIconCustomElement.prototype, "style", void 0);
 __decorate([
-    bindable
+    bindable({ changeHandler: 'replaceIcon' })
 ], FontAwesomeIconCustomElement.prototype, "symbol", void 0);
 __decorate([
-    bindable
+    bindable({ changeHandler: 'replaceIcon' })
 ], FontAwesomeIconCustomElement.prototype, "title", void 0);
 __decorate([
-    bindable
+    bindable({ changeHandler: 'replaceIcon' })
 ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
+__decorate([
+    bindable
+], FontAwesomeIconCustomElement.prototype, "stack", void 0);
 FontAwesomeIconCustomElement = __decorate([
     customElement('font-awesome-icon'),
     noView()
