@@ -193,52 +193,48 @@ export class FontAwesomeIconCustomElement {
     this.attached();
   }
 
-  protected borderChanged(value?: boolean) {
-    this.cleanAndSetClass(value && 'fa-border', 'fa-border');
+  protected propertyChanged(name: string, newValue: any, oldValue: any) {
+    const nameof = (name: keyof FontAwesomeIconCustomElement) => name;
+
+    switch (name) {
+      case nameof('border'):
+        this.replaceClass(newValue && 'fa-border', oldValue && 'fa-border');
+        break;
+      case nameof('flip'):
+        this.replaceClass((newValue === 'horizontal' || newValue === 'both') && 'fa-flip-horizontal', oldValue && 'fa-flip-horizontal');
+        this.replaceClass((newValue === 'vertical' || newValue === 'both') && 'fa-flip-vertical', oldValue && 'fa-flip-vertical');
+        break;
+      case nameof('fixedWidth'):
+        this.replaceClass(newValue && 'fa-fw', oldValue && 'fa-fw');
+        break;
+      case nameof('inverse'):
+        this.replaceClass(newValue && 'fa-inverse', oldValue && 'fa-inverse');
+        break;
+      case nameof('listItem'):
+        this.replaceClass(newValue && 'fa-li', oldValue && 'fa-li');
+        break;
+      case nameof('pulse'):
+        this.replaceClass(newValue && 'fa-pulse', oldValue && 'fa-pulse');
+        break;
+      case nameof('spin'):
+        this.replaceClass(newValue && 'fa-spin', oldValue && 'fa-spin');
+        break;
+      case nameof('size'):
+        this.replaceClass(newValue && `fa-${newValue}`, oldValue && `fa-${oldValue}`);
+        break;
+      case nameof('pull'):
+        this.replaceClass(newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
+        break;
+      case nameof('rotation'):
+        this.replaceClass(newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
+        break;
+      case nameof('stack'):
+        this.replaceClass(newValue && `fa-stack-${newValue}`, oldValue && `fa-stack-${oldValue}`);
+        break;
+    }
   }
 
-  protected flipChanged(value?: FlipArg) {
-    this.cleanAndSetClass((value === 'horizontal' || value === 'both') && 'fa-flip-horizontal', 'fa-flip-horizontal');
-    this.cleanAndSetClass((value === 'vertical' || value === 'both') && 'fa-flip-vertical', 'fa-flip-vertical');
-  }
-
-  protected fixedWidthChanged(value?: boolean) {
-    this.cleanAndSetClass(value && 'fa-fw', 'fa-fw');
-  }
-
-  protected inverseChanged(value?: boolean) {
-    this.cleanAndSetClass(value && 'fa-inverse', 'fa-inverse');
-  }
-
-  protected listItemChanged(value?: boolean) {
-    this.cleanAndSetClass(value && 'fa-li', 'fa-li');
-  }
-
-  protected pulseChanged(value?: boolean) {
-    this.cleanAndSetClass(value && 'fa-pulse', 'fa-pulse');
-  }
-
-  protected spinChanged(value?: boolean) {
-    this.cleanAndSetClass(value && 'fa-spin', 'fa-spin');
-  }
-
-  protected sizeChanged(newValue?: SizeArg, oldValue?: SizeArg) {
-    this.cleanAndSetClass(newValue && `fa-${newValue}`, oldValue && `fa-${oldValue}`);
-  }
-
-  protected pullChanged(newValue?: PullArg, oldValue?: PullArg) {
-    this.cleanAndSetClass(newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
-  }
-
-  protected rotationChanged(newValue?: RotationArg, oldValue?: RotationArg) {
-    this.cleanAndSetClass(newValue && `fa-rotate-${newValue}`, oldValue && `fa-rotate-${oldValue}`);
-  }
-
-  protected stackChanged(newValue?: StackArg, oldValue?: StackArg) {
-    this.cleanAndSetClass(newValue && `fa-stack-${newValue}`, oldValue && `fa-stack-${oldValue}`);
-  }
-
-  private cleanAndSetClass(newClass?: false | string, cleanClass?: string) {
+  private replaceClass(newClass?: false | string, oldClass?: string) {
     const svgElement = this.$element.querySelector('svg');
 
     if (!svgElement) {
@@ -246,8 +242,8 @@ export class FontAwesomeIconCustomElement {
       return;
     }
 
-    if (cleanClass && newClass !== cleanClass && svgElement.classList.contains(cleanClass)) {
-      svgElement.classList.remove(cleanClass);
+    if (oldClass && newClass !== oldClass && svgElement.classList.contains(oldClass)) {
+      svgElement.classList.remove(oldClass);
     }
 
     if (newClass) {
