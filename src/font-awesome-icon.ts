@@ -3,6 +3,7 @@ import {
   DOM,
   LogManager,
   OverrideContext,
+  View,
   ViewCompiler,
   ViewResources,
   ViewSlot,
@@ -108,73 +109,43 @@ export class FontAwesomeIconCustomElement {
 
   private bindingContext: any;
   private overrideContext: OverrideContext;
-  private classes: any = {};
   private slot: ViewSlot;
   private logger = LogManager.getLogger('aurelia-fontawesome');
+  private iconLookup: any;
+  private view: View;
+  private $i: HTMLElement;
 
   public constructor(private $element: Element,
                      private container: Container,
                      private viewCompiler: ViewCompiler,
                      private resources: ViewResources) { }
 
+   public created() {
+     this.slot = new ViewSlot(this.$element, true);
+   }
+
   public bind(bindingContext: any, overrideContext: OverrideContext) {
     this.bindingContext = bindingContext;
     this.overrideContext = createOverrideContext(bindingContext, overrideContext);
-
-    this.classes = {
-      'fa-border': this.border,
-      'fa-flip-horizontal': this.flip === 'horizontal' || this.flip === 'both',
-      'fa-flip-vertical': this.flip === 'vertical' || this.flip === 'both',
-      'fa-fw': this.fixedWidth,
-      'fa-inverse': this.inverse,
-      'fa-li': this.listItem,
-      'fa-pulse': this.pulse,
-      'fa-spin': this.spin,
-      [`fa-${this.size}`]: !!this.size,
-      [`fa-pull-${this.pull}`]: !!this.pull,
-      [`fa-rotate-${this.rotation}`]: !!this.rotation,
-      [`fa-stack-${this.stack}`]: !!this.stack
-    };
   }
 
   public attached() {
-    this.slot = new ViewSlot(this.$element, true);
+    this.iconLookup = normalizeIconArgs(this.icon);
 
-    const iconLookup = normalizeIconArgs(this.icon);
-
-    if (iconLookup === null) {
-      this.logger.error('Bound icon prop is either unsupported or null', this.icon);
-      return;
-    }
-
-    const classes = objectWithKey('classes', [
-      ...Object.keys(this.classes).filter(key => this.classes[key]),
-      ...this.className.split(' ')
-    ]);
-
-    const transform = objectWithKey(
-      'transform',
-      typeof this.transform === 'string'
-        ? parse.transform(this.transform)
-        : this.transform
-    );
-    const mask = objectWithKey('mask', normalizeIconArgs(this.mask));
-
-    const renderedIcon = icon(iconLookup, {
-      ...classes,
-      ...transform,
-      ...mask,
-      attributes: this.getOtherAttributes(),
-      styles: this.style,
-      symbol: this.symbol,
-      title: this.title
-    });
-
-    if (!renderedIcon) {
-      this.logger.error('Could not find icon', iconLookup);
+    if (this.iconLookup !== null) {
+      this.renderIcon();
     } else {
-      this.compile(renderedIcon.abstract[0]);
+      this.logger.error('Bound icon prop is either unsupported or null', this.icon);
     }
+  }
+
+  public iconChanged() {
+    this.attached();
+  }
+
+  public propertyChanged() {
+    this.detached();
+    this.renderIcon();
   }
 
   public detached(): void {
@@ -185,12 +156,16 @@ export class FontAwesomeIconCustomElement {
 
   protected compile(abstract: AbstractElement): void {
     const $icon = convert(DOM.createElement.bind(DOM), abstract);
-    const $i = DOM.createElement('i');
-    $i.innerHTML = $icon.outerHTML;
-    const factory = this.viewCompiler.compile($i, this.resources);
-    const view = factory.create(this.container, this.bindingContext);
 
-    this.slot.add(view);
+    if (!this.$i) {
+      this.$i = DOM.createElement('i');
+    }
+
+    this.$i.innerHTML = $icon.outerHTML;
+    const factory = this.viewCompiler.compile(this.$i, this.resources);
+    this.view = factory.create(this.container, this.bindingContext);
+
+    this.slot.add(this.view);
     this.slot.bind(this.bindingContext, this.overrideContext);
     this.slot.attached();
   }
@@ -214,5 +189,49 @@ export class FontAwesomeIconCustomElement {
     }
 
     return otherAttrs;
+  }
+
+  private renderIcon() {
+    const classes = {
+      'fa-border': this.border,
+      'fa-flip-horizontal': this.flip === 'horizontal' || this.flip === 'both',
+      'fa-flip-vertical': this.flip === 'vertical' || this.flip === 'both',
+      'fa-fw': this.fixedWidth,
+      'fa-inverse': this.inverse,
+      'fa-li': this.listItem,
+      'fa-pulse': this.pulse,
+      'fa-spin': this.spin,
+      [`fa-${this.size}`]: !!this.size,
+      [`fa-pull-${this.pull}`]: !!this.pull,
+      [`fa-rotate-${this.rotation}`]: !!this.rotation,
+      [`fa-stack-${this.stack}`]: !!this.stack
+    };
+    const classObj =  objectWithKey('classes', [
+      ...Object.keys(classes).filter(key => classes[key]),
+      ...this.className.split(' ')
+    ]);
+    const otherIconParams = {
+      ...objectWithKey('mask', normalizeIconArgs(this.mask)),
+      ...objectWithKey('transform',
+        typeof this.transform === 'string'
+          ? parse.transform(this.transform)
+          : this.transform
+      )
+    }
+
+    const renderedIcon = icon(this.iconLookup, {
+      ...classObj,
+      ...otherIconParams,
+      attributes: this.getOtherAttributes(),
+      styles: this.style,
+      symbol: this.symbol,
+      title: this.title
+    });
+
+    if (!renderedIcon) {
+      this.logger.error('Could not find icon', this.iconLookup);
+    } else {
+      this.compile(renderedIcon.abstract[0]);
+    }
   }
 }
