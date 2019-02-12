@@ -185,9 +185,9 @@ export class FontAwesomeIconCustomElement {
 
   protected compile(abstract: AbstractElement): void {
     const $icon = convert(DOM.createElement.bind(DOM), abstract);
-    const $template = DOM.createElement('template');
-    $template.innerHTML = $icon.outerHTML;
-    const factory = this.viewCompiler.compile($template, this.resources);
+    const $i = DOM.createElement('i');
+    $i.innerHTML = $icon.outerHTML;
+    const factory = this.viewCompiler.compile($i, this.resources);
     const view = factory.create(this.container, this.bindingContext);
 
     this.slot.add(view);
