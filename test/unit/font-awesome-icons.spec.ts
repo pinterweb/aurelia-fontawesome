@@ -447,4 +447,18 @@ describe('the font awesome icon custom element', () => {
     expect($svg.children[0].textContent).toEqual('foobar');
     done();
   });
+
+  it('uses an <i> instead of <template> to support IE', async done => {
+    /* Arrange */
+    component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>');
+    await component.create(bootstrap);
+
+    /* Act */
+    const $i = component.element.querySelector('i');
+
+    /* Assert */
+    expect($i).not.toEqual(null);
+    expect(($i as HTMLElement).children[0].tagName).toEqual('svg');
+    done();
+  });
 });
