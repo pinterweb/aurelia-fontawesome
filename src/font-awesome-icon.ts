@@ -47,7 +47,7 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
   return null;
 }
 
-@customElement('font-awesome-icon-classes')
+@customElement('font-awesome-icon')
 @noView()
 export class FontAwesomeIconCustomElement {
   public static inject() { return [Element, Container, ViewCompiler, ViewResources]; }
