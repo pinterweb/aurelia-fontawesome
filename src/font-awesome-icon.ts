@@ -11,6 +11,7 @@ import {
 import {
   Container,
   DOM,
+  Disposable,
   LogManager,
   OverrideContext,
   ViewCompiler,
@@ -110,8 +111,7 @@ export class FontAwesomeIconCustomElement {
   private bindingContext: any;
   private overrideContext: OverrideContext;
   private classes: any = {};
-  private slot: ViewSlot;
-  private $icon: Element;
+  private compiledIcon?: { $icon: Element } & Disposable;
   private logger = LogManager.getLogger('aurelia-fontawesome');
 
   public constructor(private $element: Element,
@@ -140,8 +140,77 @@ export class FontAwesomeIconCustomElement {
   }
 
   public attached() {
-    this.slot = new ViewSlot(this.$element, true);
+    this.compiledIcon = this.compileIcon();
+  }
 
+  public detached() {
+    if (this.compiledIcon) {
+      this.compiledIcon.dispose();
+    }
+  }
+
+  protected propertyChanged(name: string, newValue: any, oldValue: any) {
+    if (!this.compiledIcon) {
+      // Icon is not yet compiled as attached() is not called
+      return;
+    }
+    
+    const nameof = (name: keyof FontAwesomeIconCustomElement) => name;
+    const $icon = this.compiledIcon.$icon;
+
+    switch (name) {
+      case nameof('border'):
+        this.replaceClass($icon, newValue && 'fa-border', oldValue && 'fa-border');
+        break;
+      case nameof('flip'):
+        this.replaceClass($icon, (newValue === 'horizontal' || newValue === 'both') && 'fa-flip-horizontal', oldValue && 'fa-flip-horizontal');
+        this.replaceClass($icon, (newValue === 'vertical' || newValue === 'both') && 'fa-flip-vertical', oldValue && 'fa-flip-vertical');
+        break;
+      case nameof('fixedWidth'):
+        this.replaceClass($icon, newValue && 'fa-fw', oldValue && 'fa-fw');
+        break;
+      case nameof('inverse'):
+        this.replaceClass($icon, newValue && 'fa-inverse', oldValue && 'fa-inverse');
+        break;
+      case nameof('listItem'):
+        this.replaceClass($icon, newValue && 'fa-li', oldValue && 'fa-li');
+        break;
+      case nameof('pulse'):
+        this.replaceClass($icon, newValue && 'fa-pulse', oldValue && 'fa-pulse');
+        break;
+      case nameof('spin'):
+        this.replaceClass($icon, newValue && 'fa-spin', oldValue && 'fa-spin');
+        break;
+      case nameof('size'):
+        this.replaceClass($icon, newValue && `fa-${newValue}`, oldValue && `fa-${oldValue}`);
+        break;
+      case nameof('pull'):
+        this.replaceClass($icon, newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
+        break;
+      case nameof('rotation'):
+        this.replaceClass($icon, newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
+        break;
+      case nameof('stack'):
+        this.replaceClass($icon, newValue && `fa-stack-${newValue}`, oldValue && `fa-stack-${oldValue}`);
+        break;
+      default:
+        this.compiledIcon.dispose();
+        this.compiledIcon = this.compileIcon();
+        break;
+    }
+  }
+
+  private replaceClass(element: Element, newClass?: false | string, oldClass?: string) {
+    if (oldClass && newClass !== oldClass && element.classList.contains(oldClass)) {
+      element.classList.remove(oldClass);
+    }
+
+    if (newClass) {
+      element.classList.add(newClass);
+    }
+  }
+  
+  private compileIcon() {
     const iconLookup = normalizeIconArgs(this.icon);
 
     if (iconLookup === null) {
@@ -174,84 +243,27 @@ export class FontAwesomeIconCustomElement {
 
     if (!renderedIcon) {
       this.logger.error('Could not find icon', iconLookup);
-    } else {
-      this.compile(renderedIcon.abstract[0]);
-    }
-  }
-
-  public detached(): void {
-    this.slot.detached();
-    this.slot.unbind();
-    this.slot.removeAll();
-  }
-
-  protected propertyChanged(name: string, newValue: any, oldValue: any) {
-    const nameof = (name: keyof FontAwesomeIconCustomElement) => name;
-
-    switch (name) {
-      case nameof('border'):
-        this.replaceClass(newValue && 'fa-border', oldValue && 'fa-border');
-        break;
-      case nameof('flip'):
-        this.replaceClass((newValue === 'horizontal' || newValue === 'both') && 'fa-flip-horizontal', oldValue && 'fa-flip-horizontal');
-        this.replaceClass((newValue === 'vertical' || newValue === 'both') && 'fa-flip-vertical', oldValue && 'fa-flip-vertical');
-        break;
-      case nameof('fixedWidth'):
-        this.replaceClass(newValue && 'fa-fw', oldValue && 'fa-fw');
-        break;
-      case nameof('inverse'):
-        this.replaceClass(newValue && 'fa-inverse', oldValue && 'fa-inverse');
-        break;
-      case nameof('listItem'):
-        this.replaceClass(newValue && 'fa-li', oldValue && 'fa-li');
-        break;
-      case nameof('pulse'):
-        this.replaceClass(newValue && 'fa-pulse', oldValue && 'fa-pulse');
-        break;
-      case nameof('spin'):
-        this.replaceClass(newValue && 'fa-spin', oldValue && 'fa-spin');
-        break;
-      case nameof('size'):
-        this.replaceClass(newValue && `fa-${newValue}`, oldValue && `fa-${oldValue}`);
-        break;
-      case nameof('pull'):
-        this.replaceClass(newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
-        break;
-      case nameof('rotation'):
-        this.replaceClass(newValue && `fa-pull-${newValue}`, oldValue && `fa-pull-${oldValue}`);
-        break;
-      case nameof('stack'):
-        this.replaceClass(newValue && `fa-stack-${newValue}`, oldValue && `fa-stack-${oldValue}`);
-        break;
-      default:
-        if (this.slot) {
-          this.detached();
-          this.attached();
-        }
-        break;
-    }
-  }
-
-  private replaceClass(newClass?: false | string, oldClass?: string) {
-    if (oldClass && newClass !== oldClass && this.$icon.classList.contains(oldClass)) {
-      this.$icon.classList.remove(oldClass);
+      return;
     }
 
-    if (newClass) {
-      this.$icon.classList.add(newClass);
-    }
-  }
+    const abstract = renderedIcon.abstract[0];
 
-  protected compile(abstract: AbstractElement): void {
-    this.$icon = convert(DOM.createElement.bind(DOM), abstract);
-    const $i = DOM.createElement('i');
-    $i.innerHTML = this.$icon.outerHTML;
-    const factory = this.viewCompiler.compile($i, this.resources);
+    const $icon = convert(DOM.createElement.bind(DOM), abstract);
+    const template = `<template>${$icon.outerHTML}</template>`;
+    const factory = this.viewCompiler.compile(template, this.resources);
     const view = factory.create(this.container, this.bindingContext);
 
-    this.slot.add(view);
-    this.slot.bind(this.bindingContext, this.overrideContext);
-    this.slot.attached();
+    const slot = new ViewSlot(this.$element, true);
+    slot.add(view);
+    view.bind(this.bindingContext, this.overrideContext);
+
+    return {
+      $icon,
+      dispose: () => {
+        slot.remove(view);
+        view.unbind();
+      }
+    }
   }
 
   /**
