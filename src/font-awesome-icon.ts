@@ -1,14 +1,4 @@
 import {
-  AbstractElement,
-  IconDefinition,
-  IconLookup,
-  IconName,
-  IconPrefix,
-  Transform,
-  icon,
-  parse
-} from '@fortawesome/fontawesome-svg-core';
-import {
   Container,
   DOM,
   Disposable,
@@ -22,6 +12,15 @@ import {
   customElement,
   noView
 } from 'aurelia-framework';
+import {
+  IconDefinition,
+  IconLookup,
+  IconName,
+  IconPrefix,
+  Transform,
+  icon,
+  parse
+} from '@fortawesome/fontawesome-svg-core';
 
 import convert from './converter';
 import { objectWithKey } from './utils';
