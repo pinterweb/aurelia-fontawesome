@@ -1,4 +1,14 @@
 import {
+  AbstractElement,
+  IconDefinition,
+  IconLookup,
+  IconName,
+  IconPrefix,
+  Transform,
+  icon,
+  parse
+} from '@fortawesome/fontawesome-svg-core';
+import {
   Container,
   DOM,
   LogManager,
@@ -11,25 +21,11 @@ import {
   customElement,
   noView
 } from 'aurelia-framework';
-import {
-  AbstractElement,
-  IconDefinition,
-  IconLookup,
-  IconName,
-  IconPrefix,
-  Transform,
-  icon,
-  parse
-} from '@fortawesome/fontawesome-svg-core';
-import { objectWithKey } from './utils';
+
 import convert from './converter';
+import { objectWithKey } from './utils';
 
 type BoundIconArg = IconDefinition | IconName | Array<IconName | IconPrefix>;
-type PullArg = 'right' | 'left';
-type RotationArg = 90 | 180 | 270;
-type FlipArg = 'horizontal' | 'vertical' | 'both';
-type SizeArg = 'lg' | 'xs' | 'sm' | '1x' | '2x' | '3x' | '4x' | '5x' | '6x' | '7x' | '8x' | '9x' | '10x';
-type StackArg = '1x' | '2x';
 
 function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | null {
   if (icon == null) {
@@ -51,7 +47,7 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
   return null;
 }
 
-@customElement('font-awesome-icon')
+@customElement('font-awesome-icon-classes')
 @noView()
 export class FontAwesomeIconCustomElement {
   public static inject() { return [Element, Container, ViewCompiler, ViewResources]; }
@@ -68,8 +64,8 @@ export class FontAwesomeIconCustomElement {
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
    */
   @bindable public fixedWidth: boolean = false;
-  @bindable public flip: FlipArg;
-  @bindable({ changeHandler: 'replaceIcon' }) public icon: BoundIconArg;
+  @bindable public flip: 'horizontal' | 'vertical' | 'both';
+  @bindable public icon: BoundIconArg;
   @bindable public inverse: boolean = false;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/icons-in-a-list}
@@ -78,8 +74,8 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/masking}
    */
-  @bindable({ changeHandler: 'replaceIcon' }) public mask?: BoundIconArg;
-  @bindable public pull: PullArg;
+  @bindable public mask?: BoundIconArg;
+  @bindable public pull: 'right' | 'left';
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
    */
@@ -87,29 +83,29 @@ export class FontAwesomeIconCustomElement {
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/rotating-icons}
    */
-  @bindable public rotation?: RotationArg;
+  @bindable public rotation?: 90 | 180 | 270;
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons}
    */
-  @bindable public size?: SizeArg;
+  @bindable public size?: 'lg' |'xs' |'sm' |'1x' |'2x' |'3x' |'4x' |'5x' |'6x' |'7x' |'8x' |'9x' |'10x';
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
    */
   @bindable public spin: boolean = false;
-  @bindable({ changeHandler: 'replaceIcon' }) public style: any = {};
+  @bindable public style: any = {};
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/advanced/svg-symbols}
    */
-  @bindable({ changeHandler: 'replaceIcon' }) public symbol: boolean | string = false;
-  @bindable({ changeHandler: 'replaceIcon' }) public title: string = '';
+  @bindable public symbol: boolean | string = false;
+  @bindable public title: string = '';
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
    */
-  @bindable({ changeHandler: 'replaceIcon' }) public transform: string | Transform = '';
+  @bindable public transform: string | Transform = '';
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/stacking-icons}
    */
-  @bindable public stack?: StackArg;
+  @bindable public stack?: '1x' | '2x';
 
   private bindingContext: any;
   private overrideContext: OverrideContext;
@@ -188,11 +184,6 @@ export class FontAwesomeIconCustomElement {
     this.slot.removeAll();
   }
 
-  protected replaceIcon() {
-    this.detached();
-    this.attached();
-  }
-
   protected propertyChanged(name: string, newValue: any, oldValue: any) {
     const nameof = (name: keyof FontAwesomeIconCustomElement) => name;
 
@@ -231,6 +222,12 @@ export class FontAwesomeIconCustomElement {
       case nameof('stack'):
         this.replaceClass(newValue && `fa-stack-${newValue}`, oldValue && `fa-stack-${oldValue}`);
         break;
+      default:
+        if (this.slot) {
+          this.detached();
+          this.attached();
+        }
+        break;
     }
   }
 
@@ -253,9 +250,9 @@ export class FontAwesomeIconCustomElement {
 
   protected compile(abstract: AbstractElement): void {
     const $icon = convert(DOM.createElement.bind(DOM), abstract);
-    const $template = DOM.createElement('template');
-    $template.innerHTML = $icon.outerHTML;
-    const factory = this.viewCompiler.compile($template, this.resources);
+    const $i = DOM.createElement('i');
+    $i.innerHTML = $icon.outerHTML;
+    const factory = this.viewCompiler.compile($i, this.resources);
     const view = factory.create(this.container, this.bindingContext);
 
     this.slot.add(view);
