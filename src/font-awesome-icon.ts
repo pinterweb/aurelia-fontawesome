@@ -111,6 +111,7 @@ export class FontAwesomeIconCustomElement {
   private overrideContext: OverrideContext;
   private classes: any = {};
   private slot: ViewSlot;
+  private $icon: Element;
   private logger = LogManager.getLogger('aurelia-fontawesome');
 
   public constructor(private $element: Element,
@@ -232,26 +233,19 @@ export class FontAwesomeIconCustomElement {
   }
 
   private replaceClass(newClass?: false | string, oldClass?: string) {
-    const svgElement = this.$element.querySelector('svg');
-
-    if (!svgElement) {
-      this.logger.error('Unable to find svg element');
-      return;
-    }
-
-    if (oldClass && newClass !== oldClass && svgElement.classList.contains(oldClass)) {
-      svgElement.classList.remove(oldClass);
+    if (oldClass && newClass !== oldClass && this.$icon.classList.contains(oldClass)) {
+      this.$icon.classList.remove(oldClass);
     }
 
     if (newClass) {
-      svgElement.classList.add(newClass);
+      this.$icon.classList.add(newClass);
     }
   }
 
   protected compile(abstract: AbstractElement): void {
-    const $icon = convert(DOM.createElement.bind(DOM), abstract);
+    this.$icon = convert(DOM.createElement.bind(DOM), abstract);
     const $i = DOM.createElement('i');
-    $i.innerHTML = $icon.outerHTML;
+    $i.innerHTML = this.$icon.outerHTML;
     const factory = this.viewCompiler.compile($i, this.resources);
     const view = factory.create(this.container, this.bindingContext);
 
