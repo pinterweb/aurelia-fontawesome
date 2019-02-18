@@ -1,16 +1,9 @@
 import {
-  Container,
   DOM,
   LogManager,
-  OverrideContext,
-  View,
-  ViewCompiler,
-  ViewResources,
-  ViewSlot,
   bindable,
-  createOverrideContext,
   customElement,
-  noView
+  inlineView
 } from 'aurelia-framework';
 import {
   AbstractElement,
@@ -48,9 +41,11 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
 }
 
 @customElement('font-awesome-icon')
-@noView()
+@inlineView(`<template>
+    <div id="svg-holder" innerhtml.bind="_iconhtml"></div>
+</template><tempate>`)
 export class FontAwesomeIconCustomElement {
-  public static inject() { return [Element, Container, ViewCompiler, ViewResources]; }
+  public static inject() { return [Element]; }
 
   /**
    * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
@@ -107,27 +102,11 @@ export class FontAwesomeIconCustomElement {
    */
   @bindable public stack?: '1x' | '2x';
 
-  private bindingContext: any;
-  private overrideContext: OverrideContext;
-  private slot: ViewSlot;
   private logger = LogManager.getLogger('aurelia-fontawesome');
   private iconLookup: any;
-  private view: View;
-  private $i: HTMLElement;
+  _iconhtml: string = '';
 
-  public constructor(private $element: Element,
-                     private container: Container,
-                     private viewCompiler: ViewCompiler,
-                     private resources: ViewResources) { }
-
-   public created() {
-     this.slot = new ViewSlot(this.$element, true);
-   }
-
-  public bind(bindingContext: any, overrideContext: OverrideContext) {
-    this.bindingContext = bindingContext;
-    this.overrideContext = createOverrideContext(bindingContext, overrideContext);
-  }
+  public constructor(private $element: Element) { }
 
   public attached() {
     this.iconLookup = normalizeIconArgs(this.icon);
@@ -144,30 +123,12 @@ export class FontAwesomeIconCustomElement {
   }
 
   public propertyChanged() {
-    this.detached();
     this.renderIcon();
-  }
-
-  public detached(): void {
-    this.slot.detached();
-    this.slot.unbind();
-    this.slot.removeAll();
   }
 
   protected compile(abstract: AbstractElement): void {
     const $icon = convert(DOM.createElement.bind(DOM), abstract);
-
-    if (!this.$i) {
-      this.$i = DOM.createElement('i');
-    }
-
-    this.$i.innerHTML = $icon.outerHTML;
-    const factory = this.viewCompiler.compile(this.$i, this.resources);
-    this.view = factory.create(this.container, this.bindingContext);
-
-    this.slot.add(this.view);
-    this.slot.bind(this.bindingContext, this.overrideContext);
-    this.slot.attached();
+    this._iconhtml = $icon.outerHTML;
   }
 
   /**

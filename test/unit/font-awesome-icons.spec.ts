@@ -634,20 +634,27 @@ describe('the font awesome icon custom element', () => {
     const $afterPropChange = await component.waitForElement('.fa-circle');
 
     expect($afterPropChange.classList).toContain('fa-circle');
+    expect(document.querySelectorAll('font-awesome-icon').length).toEqual(1);
     done();
   }, 6000);
 
-  it('uses an <i> instead of <template> to support IE', async done => {
+  it('only creates one icon', async done => {
     /* Arrange */
-    component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>');
+    const context = {
+      icon: 'coffee'
+    };
+    component
+      .inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
+      .boundTo(context);
     await component.create(bootstrap);
 
     /* Act */
-    const $i = component.element.querySelector('i');
+    context.icon = 'circle';
 
+    await component.waitForElement('.fa-circle');
+    const $icons = document.querySelectorAll('svg');
     /* Assert */
-    expect($i).not.toEqual(null);
-    expect(($i as HTMLElement).children[0].tagName).toEqual('svg');
+    expect($icons.length).toEqual(1);
     done();
   });
 });
