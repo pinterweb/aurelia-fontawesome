@@ -12,7 +12,8 @@ import {
   FontAwesomeIconCustomElement
 } from '../../src/aurelia-fontawesome';
 import {
-  createSpyObj
+  createSpyObj,
+  toHyphenCase
 } from './helpers';
 import {
   faCoffee,
@@ -38,7 +39,7 @@ describe('the font awesome icon custom element', () => {
 
   afterEach(() => component.dispose());
 
-  it('binds default properties', async done => {
+  it('binds the default property values', async done => {
     /* Arrange */
     component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>');
 
@@ -184,6 +185,21 @@ describe('the font awesome icon custom element', () => {
       done();
     });
 
+    it('adds extra attributes', async done => {
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" rel="local"></font-awesome-icon>`);
+
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
+
+      /* Assert */
+      expect($svg.getAttribute('rel')).toEqual('local');
+      done();
+    });
+  });
+
+  describe('using styles', () => {
     it('adds extra styles', async done => {
       /* Arrange */
       const style = { background: 'red' };
@@ -199,18 +215,26 @@ describe('the font awesome icon custom element', () => {
       done();
     });
 
-    it('adds extra attributes', async done => {
+    it('changes the style when updated', async done => {
       /* Arrange */
-      component.inView(`<font-awesome-icon icon="coffee" rel="local"></font-awesome-icon>`);
+      const context = {
+        style: {  },
+      };
+      component.inView(`<font-awesome-icon icon="coffee" style.bind="style">
+                       </font-awesome-icon>`).boundTo(context);
+
+      await component.create(bootstrap);
 
       /* Act */
-      await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      context.style = {
+        background: 'red'
+      };
+      const $svg = await component.waitForElement('svg[style]');
 
       /* Assert */
-      expect($svg.getAttribute('rel')).toEqual('local');
+      expect($svg.getAttribute('style')).toEqual('background: red;');
       done();
-    });
+    }, 6000);
   });
 
   describe('using flip', () => {
@@ -335,6 +359,15 @@ describe('the font awesome icon custom element', () => {
   });
 
   describe('using transform', () => {
+    const transformObj = {
+      flipX: false,
+      flipY: false,
+      rotate: 15,
+      size: 56,
+      x: -4,
+      y: 0
+    };
+
     it('uses a string', async done => {
       /* Arrange */
       component.inView(`<font-awesome-icon icon="coffee" transform="grow-40 left-4 rotate-15">
@@ -351,7 +384,7 @@ describe('the font awesome icon custom element', () => {
 
     it('uses an object', async done => {
       /* Arrange */
-      const transform = { flipX: false, flipY: false, rotate: 15, size: 56, x: -4, y: 0 };
+      const transform = transformObj;
       component.inView(`<font-awesome-icon icon="coffee" transform.bind="transform">
         </font-awesome-icon>`).boundTo({ transform });
 
@@ -363,25 +396,74 @@ describe('the font awesome icon custom element', () => {
       expect($svg.getAttribute('style')).toEqual('transform-origin: 0.375em 0.5em;');
       done();
     });
-  });
 
-  [ { prefix: 'fas', iconName: 'circle' },
-    [ 'fas', 'circle' ],
-    'circle'
-  ].forEach(mask => {
-    it('accepts a mask definition, string or array', async done => {
+    it('updates when the property changes', async done => {
       /* Arrange */
-      component.inView('<font-awesome-icon icon="coffee" mask.bind="mask"></font-awesome-icon>')
-        .boundTo({ mask });
+      const context = {
+        transform: null as any
+      }
+      component.inView(`<font-awesome-icon icon="coffee" transform.bind="transform">
+        </font-awesome-icon>`).boundTo(context);
+
+      await component.create(bootstrap);
 
       /* Act */
-      await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
-      const $clipPath = $svg.querySelector('clipPath') as Element;
+      context.transform = transformObj;
+
+      const $svg = await component.waitForElement('svg[style]');
 
       /* Assert */
-      expect($clipPath).toBeTruthy();
+      expect($svg.getAttribute('style')).toEqual('transform-origin: 0.375em 0.5em;');
       done();
+    });
+  });
+
+  describe('using mask', () => {
+    const maskArgs = [
+      { prefix: 'fas', iconName: 'circle' },
+      [ 'fas', 'circle' ]
+    ];
+
+    maskArgs.forEach(mask => {
+      it('works with a string or array', async done => {
+        /* Arrange */
+        component.inView('<font-awesome-icon icon="coffee" mask.bind="mask"></font-awesome-icon>')
+          .boundTo({ mask });
+
+        /* Act */
+        await component.create(bootstrap);
+        const $svg = document.querySelector('svg') as Element;
+        const $clipPath = $svg.querySelector('clipPath') as Element;
+
+        /* Assert */
+        expect($clipPath).toBeTruthy();
+        done();
+      });
+    });
+
+    maskArgs.forEach(mask => {
+      it('changes on property update', async done => {
+        /* Arrange */
+        const context = {
+          mask: null as any
+        };
+        component.inView(`<font-awesome-icon icon="coffee" mask.bind="mask">
+                         </font-awesome-icon>`).boundTo(context);
+
+        await component.create(bootstrap);
+        const $svg = document.querySelector('svg') as Element;
+        const $clipPathBefore = $svg.querySelector('clipPath') as Element;
+        expect($clipPathBefore).toBeFalsy();
+
+        /* Act */
+        context.mask = mask
+
+        const $clipPathAfter = await component.waitForElement('clipPath') as Element;
+
+        /* Assert */
+        expect($clipPathAfter).toBeTruthy();
+        done();
+      });
     });
   });
 
@@ -415,50 +497,164 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
+      const $symbol = document.querySelector('symbol') as Element;
 
       /* Assert */
+      expect($symbol).toEqual(null);
       expect(spy.mock.calls[0][1].symbol).toEqual(false);
       done();
     });
 
     it('creates a symbol', async done => {
       /* Arrange */
-      component.inView('<font-awesome-icon icon.bind="faCoffee" symbol="coffee-icon"></font-awesome-icon>')
-        .boundTo({ faCoffee });
+      component.inView(`<font-awesome-icon icon.bind="faCoffee" symbol="coffee-icon">
+                       </font-awesome-icon>`).boundTo({ faCoffee });
 
       /* Act */
       await component.create(bootstrap);
+      const $symbol = await component.waitForElement('symbol') as Element;
 
       /* Assert */
-      expect(spy.mock.calls[0][1].symbol).toEqual('coffee-icon');
+      expect($symbol.id).toEqual('coffee-icon');
+      done();
+    }, 6000);
+
+    it('creates a symbol when the property changes', async done => {
+      const context: any = { }
+
+      /* Arrange */
+      component.inView(`<font-awesome-icon icon="coffee" symbol.bind="symbol">
+                       </font-awesome-icon>`).boundTo(context);
+
+      await component.create(bootstrap);
+
+      /* Act */
+      context.symbol = 'coffee-icon';
+
+      const $symbol = await component.waitForElement('symbol') as Element;
+
+      /* Assert */
+      expect($symbol.id).toEqual('coffee-icon');
       done();
     });
   });
 
-  it('adds a title element', async done => {
-    /* Arrange */
-    component.inView('<font-awesome-icon icon="coffee" title="foobar"></font-awesome-icon>');
+  describe('the title property', () => {
+    it('adds a title element', async done => {
+      /* Arrange */
+      component.inView('<font-awesome-icon icon="coffee" title="foobar"></font-awesome-icon>');
 
-    /* Act */
-    await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+      /* Act */
+      await component.create(bootstrap);
+      const $svg = document.querySelector('svg') as Element;
 
-    expect($svg.children[0].tagName).toEqual('title');
-    expect($svg.children[0].textContent).toEqual('foobar');
-    done();
+      expect($svg.children[0].tagName).toEqual('title');
+      expect($svg.children[0].textContent).toEqual('foobar');
+      done();
+    });
+
+    it('changes the title name when the prop changes', async done => {
+      /* Arrange */
+      const context = {
+        title: ''
+      }
+      component.inView(`<font-awesome-icon icon="coffee" title.bind="title">
+                       </font-awesome-icon>`).boundTo(context);
+
+      /* Act */
+      await component.create(bootstrap);
+
+      context.title = 'bar';
+
+      const $title = await component.waitForElement('title');
+
+      expect($title).not.toEqual(null);
+      expect($title.textContent).toEqual('bar');
+      done();
+    });
   });
 
-  it('uses an <i> instead of <template> to support IE', async done => {
+  [{ prop: 'border', val: true, className: 'fa-border' },
+   { prop: 'fixedWidth', val: true, className: 'fa-fw' },
+   { prop: 'flip', val: 'horizontal', className: 'fa-flip-horizontal' },
+   { prop: 'flip', val: 'vertical', className: 'fa-flip-vertical' },
+   { prop: 'flip', val: 'both', className: 'fa-flip-horizontal' },
+   { prop: 'flip', val: 'both', className: 'fa-flip-vertical' },
+   { prop: 'inverse', val: true, className: 'fa-inverse' },
+   { prop: 'listItem', val: true, className: 'fa-li' },
+   { prop: 'pull', val: 'right', className: 'fa-pull-right' },
+   { prop: 'pull', val: 'left', className: 'fa-pull-left' },
+   { prop: 'pulse', val: true, className: 'fa-pulse' },
+   { prop: 'rotation', val: 90, className: 'fa-rotate-90' },
+   { prop: 'rotation', val: 180, className: 'fa-rotate-180' },
+   { prop: 'rotation', val: 270, className: 'fa-rotate-270' },
+   { prop: 'size', val: 'lg', className: 'fa-lg' },
+   { prop: 'spin', val: true, className: 'fa-spin' },
+   { prop: 'stack', val: '1x', className: 'fa-stack-1x' }
+  ].forEach(rec => {
+    it('recompiles when any bindable property changes', async done => {
+      /* Arrange */
+      const context = {
+        [rec.prop]: null
+      };
+      component
+        .inView(`<font-awesome-icon icon="coffee"
+                ${toHyphenCase(rec.prop)}.bind="${rec.prop}"></font-awesome-icon>`)
+        .boundTo(context);
+
+      await component.create(bootstrap);
+      const $beforePropChange = document.querySelector('svg') as Element;
+
+      /* Act */
+      context[rec.prop] = rec.val as any;
+
+      expect($beforePropChange.classList).not.toContain(rec.className);
+
+      const $afterPropChange = await component.waitForElement(`.${rec.className}`);
+
+      expect($afterPropChange.classList).toContain(rec.className);
+      done();
+    }, 6000);
+  });
+
+  it('recompiles when the icon when it changes', async done => {
     /* Arrange */
-    component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>');
+    const context = {
+      icon: 'coffee'
+    };
+    component
+      .inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
+      .boundTo(context);
+
     await component.create(bootstrap);
 
     /* Act */
-    const $i = component.element.querySelector('i');
+    context.icon = 'circle';
 
+    const $afterPropChange = await component.waitForElement('.fa-circle');
+
+    expect($afterPropChange.classList).toContain('fa-circle');
+    expect(document.querySelectorAll('font-awesome-icon').length).toEqual(1);
+    done();
+  }, 6000);
+
+  it('only creates one icon', async done => {
+    /* Arrange */
+    const context = {
+      icon: 'coffee'
+    };
+    component
+      .inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
+      .boundTo(context);
+    await component.create(bootstrap);
+
+    /* Act */
+    context.icon = 'circle';
+
+    await component.waitForElement('.fa-circle');
+    const $icons = document.querySelectorAll('svg');
     /* Assert */
-    expect($i).not.toEqual(null);
-    expect(($i as HTMLElement).children[0].tagName).toEqual('svg');
+    expect($icons.length).toEqual(1);
     done();
   });
 });
