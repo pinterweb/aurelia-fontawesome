@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Container, DOM, LogManager, ViewCompiler, ViewResources, ViewSlot, bindable, createOverrideContext, customElement, noView } from 'aurelia-framework';
+import { DOM, LogManager, bindable, customElement, inlineView } from 'aurelia-framework';
 import { icon, parse } from '@fortawesome/fontawesome-svg-core';
 import { objectWithKey } from './utils';
 import convert from './converter';
@@ -24,11 +24,8 @@ function normalizeIconArgs(icon) {
     return null;
 }
 let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
-    constructor($element, container, viewCompiler, resources) {
+    constructor($element) {
         this.$element = $element;
-        this.container = container;
-        this.viewCompiler = viewCompiler;
-        this.resources = resources;
         /**
          * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
          */
@@ -64,64 +61,28 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
          * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
          */
         this.transform = '';
-        this.classes = {};
         this.logger = LogManager.getLogger('aurelia-fontawesome');
+        this._iconhtml = '';
     }
-    static inject() { return [Element, Container, ViewCompiler, ViewResources]; }
-    bind(bindingContext, overrideContext) {
-        this.bindingContext = bindingContext;
-        this.overrideContext = createOverrideContext(bindingContext, overrideContext);
-        this.classes = {
-            'fa-border': this.border,
-            'fa-flip-horizontal': this.flip === 'horizontal' || this.flip === 'both',
-            'fa-flip-vertical': this.flip === 'vertical' || this.flip === 'both',
-            'fa-fw': this.fixedWidth,
-            'fa-inverse': this.inverse,
-            'fa-li': this.listItem,
-            'fa-pulse': this.pulse,
-            'fa-spin': this.spin,
-            [`fa-${this.size}`]: !!this.size,
-            [`fa-pull-${this.pull}`]: !!this.pull,
-            [`fa-rotate-${this.rotation}`]: !!this.rotation
-        };
-    }
+    static inject() { return [Element]; }
     attached() {
-        this.slot = new ViewSlot(this.$element, true);
-        const iconLookup = normalizeIconArgs(this.icon);
-        if (iconLookup === null) {
-            this.logger.error('Bound icon prop is either unsupported or null', this.icon);
-            return;
-        }
-        const classes = objectWithKey('classes', [
-            ...Object.keys(this.classes).filter(key => this.classes[key]),
-            ...this.className.split(' ')
-        ]);
-        const transform = objectWithKey('transform', typeof this.transform === 'string'
-            ? parse.transform(this.transform)
-            : this.transform);
-        const mask = objectWithKey('mask', normalizeIconArgs(this.mask));
-        const renderedIcon = icon(iconLookup, Object.assign({}, classes, transform, mask, { attributes: this.getOtherAttributes(), styles: this.style, symbol: this.symbol, title: this.title }));
-        if (!renderedIcon) {
-            this.logger.error('Could not find icon', iconLookup);
+        this.iconLookup = normalizeIconArgs(this.icon);
+        if (this.iconLookup !== null) {
+            this.renderIcon();
         }
         else {
-            this.compile(renderedIcon.abstract[0]);
+            this.logger.error('Bound icon prop is either unsupported or null', this.icon);
         }
     }
-    detached() {
-        this.slot.detached();
-        this.slot.unbind();
-        this.slot.removeAll();
+    iconChanged() {
+        this.attached();
+    }
+    propertyChanged() {
+        this.renderIcon();
     }
     compile(abstract) {
         const $icon = convert(DOM.createElement.bind(DOM), abstract);
-        const $template = DOM.createElement('template');
-        $template.innerHTML = $icon.outerHTML;
-        const factory = this.viewCompiler.compile($template, this.resources);
-        const view = factory.create(this.container, this.bindingContext);
-        this.slot.add(view);
-        this.slot.bind(this.bindingContext, this.overrideContext);
-        this.slot.attached();
+        this._iconhtml = $icon.outerHTML;
     }
     /**
      * Get all non aurelia and non bound attributes and pass it to the
@@ -140,6 +101,36 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
             }
         }
         return otherAttrs;
+    }
+    renderIcon() {
+        const classes = {
+            'fa-border': this.border,
+            'fa-flip-horizontal': this.flip === 'horizontal' || this.flip === 'both',
+            'fa-flip-vertical': this.flip === 'vertical' || this.flip === 'both',
+            'fa-fw': this.fixedWidth,
+            'fa-inverse': this.inverse,
+            'fa-li': this.listItem,
+            'fa-pulse': this.pulse,
+            'fa-spin': this.spin,
+            [`fa-${this.size}`]: !!this.size,
+            [`fa-pull-${this.pull}`]: !!this.pull,
+            [`fa-rotate-${this.rotation}`]: !!this.rotation,
+            [`fa-stack-${this.stack}`]: !!this.stack
+        };
+        const classObj = objectWithKey('classes', [
+            ...Object.keys(classes).filter(key => classes[key]),
+            ...this.className.split(' ')
+        ]);
+        const otherIconParams = Object.assign({}, objectWithKey('mask', normalizeIconArgs(this.mask)), objectWithKey('transform', typeof this.transform === 'string'
+            ? parse.transform(this.transform)
+            : this.transform));
+        const renderedIcon = icon(this.iconLookup, Object.assign({}, classObj, otherIconParams, { attributes: this.getOtherAttributes(), styles: this.style, symbol: this.symbol, title: this.title }));
+        if (!renderedIcon) {
+            this.logger.error('Could not find icon', this.iconLookup);
+        }
+        else {
+            this.compile(renderedIcon.abstract[0]);
+        }
     }
 };
 __decorate([
@@ -193,9 +184,14 @@ __decorate([
 __decorate([
     bindable
 ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
+__decorate([
+    bindable
+], FontAwesomeIconCustomElement.prototype, "stack", void 0);
 FontAwesomeIconCustomElement = __decorate([
     customElement('font-awesome-icon'),
-    noView()
+    inlineView(`<template>
+    <div id="svg-holder" innerhtml.bind="_iconhtml"></div>
+</template><tempate>`)
 ], FontAwesomeIconCustomElement);
 export { FontAwesomeIconCustomElement };
 //# sourceMappingURL=font-awesome-icon.js.map

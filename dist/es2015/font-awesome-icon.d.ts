@@ -1,15 +1,11 @@
-import { Container, OverrideContext, ViewCompiler, ViewResources } from 'aurelia-framework';
 import { AbstractElement, IconDefinition, IconName, IconPrefix, Transform } from '@fortawesome/fontawesome-svg-core';
 declare type BoundIconArg = IconDefinition | IconName | Array<IconName | IconPrefix>;
 export declare class FontAwesomeIconCustomElement {
     private $element;
-    private container;
-    private viewCompiler;
-    private resources;
-    static inject(): ({
+    static inject(): {
         new (): Element;
         prototype: Element;
-    } | typeof Container | typeof ViewResources | typeof ViewCompiler)[];
+    }[];
     /**
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
      */
@@ -60,20 +56,23 @@ export declare class FontAwesomeIconCustomElement {
      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
      */
     transform: string | Transform;
-    private bindingContext;
-    private overrideContext;
-    private classes;
-    private slot;
+    /**
+     * {@link https://fontawesome.com/how-to-use/on-the-web/styling/stacking-icons}
+     */
+    stack?: '1x' | '2x';
     private logger;
-    constructor($element: Element, container: Container, viewCompiler: ViewCompiler, resources: ViewResources);
-    bind(bindingContext: any, overrideContext: OverrideContext): void;
+    private iconLookup;
+    _iconhtml: string;
+    constructor($element: Element);
     attached(): void;
-    detached(): void;
+    iconChanged(): void;
+    propertyChanged(): void;
     protected compile(abstract: AbstractElement): void;
     /**
      * Get all non aurelia and non bound attributes and pass it to the
      * font awesome svg element
      */
     private getOtherAttributes;
+    private renderIcon;
 }
 export {};

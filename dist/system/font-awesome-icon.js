@@ -51,11 +51,8 @@ System.register(["aurelia-framework", "@fortawesome/fontawesome-svg-core", "./ut
         ],
         execute: function () {
             FontAwesomeIconCustomElement = /** @class */ (function () {
-                function FontAwesomeIconCustomElement($element, container, viewCompiler, resources) {
+                function FontAwesomeIconCustomElement($element) {
                     this.$element = $element;
-                    this.container = container;
-                    this.viewCompiler = viewCompiler;
-                    this.resources = resources;
                     /**
                      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
                      */
@@ -91,64 +88,28 @@ System.register(["aurelia-framework", "@fortawesome/fontawesome-svg-core", "./ut
                      * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
                      */
                     this.transform = '';
-                    this.classes = {};
                     this.logger = aurelia_framework_1.LogManager.getLogger('aurelia-fontawesome');
+                    this._iconhtml = '';
                 }
-                FontAwesomeIconCustomElement.inject = function () { return [Element, aurelia_framework_1.Container, aurelia_framework_1.ViewCompiler, aurelia_framework_1.ViewResources]; };
-                FontAwesomeIconCustomElement.prototype.bind = function (bindingContext, overrideContext) {
-                    var _a;
-                    this.bindingContext = bindingContext;
-                    this.overrideContext = aurelia_framework_1.createOverrideContext(bindingContext, overrideContext);
-                    this.classes = (_a = {
-                            'fa-border': this.border,
-                            'fa-flip-horizontal': this.flip === 'horizontal' || this.flip === 'both',
-                            'fa-flip-vertical': this.flip === 'vertical' || this.flip === 'both',
-                            'fa-fw': this.fixedWidth,
-                            'fa-inverse': this.inverse,
-                            'fa-li': this.listItem,
-                            'fa-pulse': this.pulse,
-                            'fa-spin': this.spin
-                        },
-                        _a["fa-" + this.size] = !!this.size,
-                        _a["fa-pull-" + this.pull] = !!this.pull,
-                        _a["fa-rotate-" + this.rotation] = !!this.rotation,
-                        _a);
-                };
+                FontAwesomeIconCustomElement.inject = function () { return [Element]; };
                 FontAwesomeIconCustomElement.prototype.attached = function () {
-                    var _this = this;
-                    this.slot = new aurelia_framework_1.ViewSlot(this.$element, true);
-                    var iconLookup = normalizeIconArgs(this.icon);
-                    if (iconLookup === null) {
-                        this.logger.error('Bound icon prop is either unsupported or null', this.icon);
-                        return;
-                    }
-                    var classes = utils_1.objectWithKey('classes', Object.keys(this.classes).filter(function (key) { return _this.classes[key]; }).concat(this.className.split(' ')));
-                    var transform = utils_1.objectWithKey('transform', typeof this.transform === 'string'
-                        ? fontawesome_svg_core_1.parse.transform(this.transform)
-                        : this.transform);
-                    var mask = utils_1.objectWithKey('mask', normalizeIconArgs(this.mask));
-                    var renderedIcon = fontawesome_svg_core_1.icon(iconLookup, __assign({}, classes, transform, mask, { attributes: this.getOtherAttributes(), styles: this.style, symbol: this.symbol, title: this.title }));
-                    if (!renderedIcon) {
-                        this.logger.error('Could not find icon', iconLookup);
+                    this.iconLookup = normalizeIconArgs(this.icon);
+                    if (this.iconLookup !== null) {
+                        this.renderIcon();
                     }
                     else {
-                        this.compile(renderedIcon.abstract[0]);
+                        this.logger.error('Bound icon prop is either unsupported or null', this.icon);
                     }
                 };
-                FontAwesomeIconCustomElement.prototype.detached = function () {
-                    this.slot.detached();
-                    this.slot.unbind();
-                    this.slot.removeAll();
+                FontAwesomeIconCustomElement.prototype.iconChanged = function () {
+                    this.attached();
+                };
+                FontAwesomeIconCustomElement.prototype.propertyChanged = function () {
+                    this.renderIcon();
                 };
                 FontAwesomeIconCustomElement.prototype.compile = function (abstract) {
                     var $icon = converter_1.default(aurelia_framework_1.DOM.createElement.bind(aurelia_framework_1.DOM), abstract);
-                    var $template = aurelia_framework_1.DOM.createElement('template');
-                    $template.innerHTML = $icon.outerHTML;
-                    var factory = this.viewCompiler.compile($template, this.resources);
-                    var view = factory.create(this.container, this.bindingContext);
-                    this.slot.add(view);
-                    this.slot.bind(this.bindingContext, this.overrideContext);
-                    this.slot.attached();
+                    this._iconhtml = $icon.outerHTML;
                 };
                 /**
                  * Get all non aurelia and non bound attributes and pass it to the
@@ -167,6 +128,35 @@ System.register(["aurelia-framework", "@fortawesome/fontawesome-svg-core", "./ut
                         }
                     }
                     return otherAttrs;
+                };
+                FontAwesomeIconCustomElement.prototype.renderIcon = function () {
+                    var _a;
+                    var classes = (_a = {
+                            'fa-border': this.border,
+                            'fa-flip-horizontal': this.flip === 'horizontal' || this.flip === 'both',
+                            'fa-flip-vertical': this.flip === 'vertical' || this.flip === 'both',
+                            'fa-fw': this.fixedWidth,
+                            'fa-inverse': this.inverse,
+                            'fa-li': this.listItem,
+                            'fa-pulse': this.pulse,
+                            'fa-spin': this.spin
+                        },
+                        _a["fa-" + this.size] = !!this.size,
+                        _a["fa-pull-" + this.pull] = !!this.pull,
+                        _a["fa-rotate-" + this.rotation] = !!this.rotation,
+                        _a["fa-stack-" + this.stack] = !!this.stack,
+                        _a);
+                    var classObj = utils_1.objectWithKey('classes', Object.keys(classes).filter(function (key) { return classes[key]; }).concat(this.className.split(' ')));
+                    var otherIconParams = __assign({}, utils_1.objectWithKey('mask', normalizeIconArgs(this.mask)), utils_1.objectWithKey('transform', typeof this.transform === 'string'
+                        ? fontawesome_svg_core_1.parse.transform(this.transform)
+                        : this.transform));
+                    var renderedIcon = fontawesome_svg_core_1.icon(this.iconLookup, __assign({}, classObj, otherIconParams, { attributes: this.getOtherAttributes(), styles: this.style, symbol: this.symbol, title: this.title }));
+                    if (!renderedIcon) {
+                        this.logger.error('Could not find icon', this.iconLookup);
+                    }
+                    else {
+                        this.compile(renderedIcon.abstract[0]);
+                    }
                 };
                 __decorate([
                     aurelia_framework_1.bindable
@@ -219,9 +209,12 @@ System.register(["aurelia-framework", "@fortawesome/fontawesome-svg-core", "./ut
                 __decorate([
                     aurelia_framework_1.bindable
                 ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
+                __decorate([
+                    aurelia_framework_1.bindable
+                ], FontAwesomeIconCustomElement.prototype, "stack", void 0);
                 FontAwesomeIconCustomElement = __decorate([
                     aurelia_framework_1.customElement('font-awesome-icon'),
-                    aurelia_framework_1.noView()
+                    aurelia_framework_1.inlineView("<template>\n    <div id=\"svg-holder\" innerhtml.bind=\"_iconhtml\"></div>\n</template><tempate>")
                 ], FontAwesomeIconCustomElement);
                 return FontAwesomeIconCustomElement;
             }());
