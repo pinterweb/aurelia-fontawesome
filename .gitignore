@@ -3,3 +3,5 @@ test/coverage-jest/
 dist/doc-temp
 *.swp
 npm-debug.log
+tags*
+*.tgz
