@@ -4,6 +4,7 @@
     "dist",
     "doc",
     "node_modules",
-    "test"
+    "test",
+    "examples"
   ]
 }

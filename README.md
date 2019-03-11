@@ -17,6 +17,7 @@ Inspired by:
 - [Dependencies](#dependencies)
 - [Building the Code](#building-the-code)
 - [Running the tests](#running-the-tests)
+- [Running the examples](#running-the-examples)
 
 ## Installation
 
@@ -63,7 +64,7 @@ _foobar.js_
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
 export class FooBarViewModel {
-  coffeeIcon = faCoffee;  
+  coffeeIcon = faCoffee;
 }
 ```
 
@@ -76,6 +77,7 @@ _foobar.html_
 
 > Explicitly importing icons like this allows us to subset Font Awesome's
 > thousands of icons to include only those you use in your final bundled file.
+> for an alternative approach check out webpack loader [aurelia-fontawesome-loader](https://github.com/rmja/aurelia-fontawesome-loader)
 
 ### Build a Library to Reference Icons Throughout Your App More Conveniently
 _main.js_
@@ -189,3 +191,22 @@ To run the unit tests, first ensure that you have followed the steps above in or
   ```shell
   cat /test/coverage-jest/index.html
   ```
+
+## Running The Examples
+
+1. Change to the examples directory
+
+  ```shell
+  cd ./examples
+  ```
+
+2. Run npm
+
+  ```shell
+  npm start
+  ```
+
+Kind of a pain to run examples while changing the source code to see your changes
+since npm linking will not work because aurelia's DOM not being available.
+
+For now I've included a build script `npm run build:examples` to generate a new tar.gz file

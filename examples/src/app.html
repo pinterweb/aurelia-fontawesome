@@ -1,0 +1,51 @@
+<template>
+  <h1 class="title">${message}</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Usage</th>
+        <th>Icon(s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Basic</td>
+        <td><font-awesome-icon icon="home"></font-awesome-icon></td>
+      </tr>
+      <tr>
+        <td>Sizes</td>
+        <td>
+          <font-awesome-icon size="xs" icon="home"></font-awesome-icon>
+          <font-awesome-icon size="2x" icon="home"></font-awesome-icon>
+        </td>
+      </tr>
+      <tr>
+        <td>User Attributes</td>
+        <td>
+          <font-awesome-icon class="has-text-primary" icon="home"></font-awesome-icon>
+        </td>
+      </tr>
+      <tr>
+        <td>Animations</td>
+        <td>
+          <font-awesome-icon icon="spinner" spin.bind="true"></font-awesome-icon>
+          <font-awesome-icon icon="spinner" pulse.bind="true"></font-awesome-icon>
+        </td>
+      </tr>
+      <tr>
+        <td>Masking</td>
+        <td>
+          <font-awesome-icon icon="home" mask="circle" size="3x"></font-awesome-icon>
+        </td>
+      </tr>
+      <tr>
+        <td>Reactive</td>
+        <td>
+          <font-awesome-icon icon.bind="icon"></font-awesome-icon>
+          <button click.delegate="icon=(icon==='home' ? 'circle' : 'home')">Change</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</template>
