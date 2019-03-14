@@ -189,9 +189,7 @@ __decorate([
 ], FontAwesomeIconCustomElement.prototype, "stack", void 0);
 FontAwesomeIconCustomElement = __decorate([
     customElement('font-awesome-icon'),
-    inlineView(`<template>
-    <div id="svg-holder" innerhtml.bind="_iconhtml"></div>
-</template><tempate>`)
+    inlineView(`<template innerhtml.bind="_iconhtml"></template>`)
 ], FontAwesomeIconCustomElement);
 export { FontAwesomeIconCustomElement };
 //# sourceMappingURL=font-awesome-icon.js.map

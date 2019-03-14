@@ -197,7 +197,7 @@ define(["require", "exports", "aurelia-framework", "@fortawesome/fontawesome-svg
         ], FontAwesomeIconCustomElement.prototype, "stack", void 0);
         FontAwesomeIconCustomElement = __decorate([
             aurelia_framework_1.customElement('font-awesome-icon'),
-            aurelia_framework_1.inlineView("<template>\n    <div id=\"svg-holder\" innerhtml.bind=\"_iconhtml\"></div>\n</template><tempate>")
+            aurelia_framework_1.inlineView("<template innerhtml.bind=\"_iconhtml\"></template>")
         ], FontAwesomeIconCustomElement);
         return FontAwesomeIconCustomElement;
     }());

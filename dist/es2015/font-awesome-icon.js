@@ -198,7 +198,7 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
     ], FontAwesomeIconCustomElement.prototype, "stack", void 0);
     FontAwesomeIconCustomElement = __decorate([
         customElement('font-awesome-icon'),
-        inlineView("<template>\n    <div id=\"svg-holder\" innerhtml.bind=\"_iconhtml\"></div>\n</template><tempate>")
+        inlineView("<template innerhtml.bind=\"_iconhtml\"></template>")
     ], FontAwesomeIconCustomElement);
     return FontAwesomeIconCustomElement;
 }());
