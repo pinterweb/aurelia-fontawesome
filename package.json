@@ -19,7 +19,7 @@
     "test": "cross-env jest --config=./test/jest.config.js",
     "test-ci": "cross-env jest --config=./test/jest.config.js && cat ./test/coverage-jest/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test-watch": "concurrently \"tsc --watch\" \"jest --config=./test/jest.config.js --watch\"",
-    "build:examples": "npm run build && npm pack && cd ./examples && npm i ../aurelia-fontawesome-0.1.0.tgz",
+    "build:examples": "npm run build && npm pack && cd ./examples && npm i ../aurelia-fontawesome-0.2.0.tgz",
     "build:amd": "cross-env tsc --p tsconfig-build.json --outDir dist/amd --module amd",
     "build:commonjs": "cross-env tsc --p tsconfig-build.json --outDir dist/commonjs --module commonjs",
     "build:es2015": "cross-env tsc --p tsconfig-build.json --outDir dist/es2015 --module es2015",
@@ -62,6 +62,7 @@
   },
   "devDependencies": {
     "@types/jest": "^21.1.10",
+    "@types/jsdom": "^12.2.3",
     "@types/node": "^8.10.43",
     "aurelia-bootstrapper": "^2.3.2",
     "aurelia-loader-nodejs": "^1.0.1",

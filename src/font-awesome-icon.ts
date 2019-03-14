@@ -41,9 +41,7 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
 }
 
 @customElement('font-awesome-icon')
-@inlineView(`<template>
-    <div id="svg-holder" innerhtml.bind="_iconhtml"></div>
-</template><tempate>`)
+@inlineView(`<template innerhtml.bind="_iconhtml"></template>`)
 export class FontAwesomeIconCustomElement {
   public static inject() { return [Element]; }
 
