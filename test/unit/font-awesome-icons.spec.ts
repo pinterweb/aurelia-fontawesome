@@ -657,4 +657,20 @@ describe('the font awesome icon custom element', () => {
     expect($icons.length).toEqual(1);
     done();
   });
+
+  // kind of a silly test, but i made a silly mistake
+  // https://github.com/jmzagorski/aurelia-fontawesome/issues/12
+  it('only creates the font awesome svg to keep things simple/clean', async done => {
+    /* Arrange */
+    component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>')
+
+    /* Act */
+    await component.create(bootstrap);
+
+    /* Assert */
+    expect(component.element.children.length).toEqual(1);
+    expect(component.element.children[0].tagName).toEqual('svg');
+    expect(component.element.children[0].id).toEqual('');
+    done();
+  });
 });
