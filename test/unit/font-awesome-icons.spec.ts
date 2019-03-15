@@ -26,7 +26,9 @@ fontawesome.library.add(faCoffee, faCircle);
 
 describe('the font awesome icon custom element', () => {
   let component: ComponentTester<FontAwesomeIconCustomElement>;
-  let logger: logging.Logger;
+  let logger: any;
+  let getLogger: jest.SpyInstance;
+  let iconSpy: jest.SpyInstance;
 
   beforeEach(() => {
     component = StageComponent
@@ -35,9 +37,14 @@ describe('the font awesome icon custom element', () => {
     );
 
     logger = createSpyObj('logger', logging.Logger.prototype);
+    getLogger = jest.spyOn(logging, 'getLogger');
+    getLogger.mockReturnValue(logger);
   });
 
-  afterEach(() => component.dispose());
+  afterEach(() => {
+    component.dispose();
+    jest.restoreAllMocks();
+  });
 
   it('binds the default property values', async done => {
     /* Arrange */
@@ -45,7 +52,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+    const $svg = await component.waitForElement('svg');
 
     /* Assert */
     expect($svg).toBeTruthy();
@@ -71,11 +78,11 @@ describe('the font awesome icon custom element', () => {
     it('accepts an icon definition, string or array', async done => {
       /* Arrange */
       component.inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
-      .boundTo({ icon });
+        .boundTo({ icon });
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg).toBeTruthy();
@@ -86,48 +93,46 @@ describe('the font awesome icon custom element', () => {
     });
   });
 
-  [ { icon: null, loggedObj: null },
-    { icon: { prefix: 'fas' }, loggedObj: { prefix: 'fas' } },
-    { icon: { iconName: 'coffee' }, loggedObj: { iconName: 'coffee' } },
-    { icon: [ 'coffee' ], loggedObj: [ 'coffee' ] },
-  ].forEach(rec => {
-    it('logs an error with unsupported icon arg', async done => {
-      /* Arrange */
-      component.inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
-      .boundTo({ icon: rec.icon });
+  describe('logging an error', () => {
+    [ { icon: null, loggedObj: null },
+      { icon: { prefix: 'fas' } },
+      { icon: { iconName: 'coffee' } },
+      { icon: [ 'coffee' ] },
+    ].forEach(rec => {
+      it('logs an error with unsupported icon arg', async done => {
+        /* Arrange */
+        component.inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
+        .boundTo({ icon: rec.icon });
 
-      spyOn(logging, 'getLogger').and.returnValue(logger);
+        /* Act */
+        await component.create(bootstrap);
 
-      /* Act */
-      await component.create(bootstrap);
-
-      /* Assert */
-      expect(logging.getLogger).toHaveBeenCalledWith('aurelia-fontawesome');
-      expect(logger.error).toHaveBeenCalledWith('Bound icon prop is either unsupported or null', rec.loggedObj);
-      done();
+        /* Assert */
+        expect(logger.error.mock.calls.length).toEqual(1);
+        expect(getLogger).toHaveBeenCalledWith('aurelia-fontawesome');
+        expect(logger.error.mock.calls[0][0]).toEqual('Bound icon prop is either unsupported or null');
+        expect(logger.error.mock.calls[0][1]).toBe(rec.icon);
+        done();
+      });
     });
-  });
 
-  [ { prefix: 'fas', iconName: 'foo' },
-    [ 'fas', 'foo' ],
-    'foo'
-  ].forEach(icon => {
-    it('logs an error with missing icon', async done => {
-      /* Arrange */
-      component.inView(`<font-awesome-icon icon.bind="icon">
-                       </font-awesome-icon>`).boundTo({ icon });
+    [ { prefix: 'fas', iconName: 'foo' },
+      [ 'fas', 'foo' ],
+      'foo'
+    ].forEach(icon => {
+      it('logs an error with missing icon', async done => {
+        /* Arrange */
+        component.inView(`<font-awesome-icon icon.bind="icon">
+                         </font-awesome-icon>`).boundTo({ icon });
 
-      spyOn(logging, 'getLogger').and.returnValue(logger);
+        /* Act */
+        await component.create(bootstrap);
 
-      /* Act */
-      await component.create(bootstrap);
-
-      /* Assert */
-      expect(logging.getLogger).toHaveBeenCalledWith('aurelia-fontawesome');
-      expect(logger.error).toHaveBeenCalledWith(
-        'Could not find icon',
-        { prefix: 'fas', iconName: 'foo' });
-      done();
+        /* Assert */
+        expect(logger.error.mock.calls[0][0]).toEqual('Could not find icon');
+        expect(logger.error.mock.calls[0][1]).toEqual({ prefix: 'fas', iconName: 'foo' });
+        done();
+      });
     });
   });
 
@@ -137,7 +142,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+    const $svg = await component.waitForElement('svg');
 
     /* Assert */
     expect($svg.classList).toContain('fa-border');
@@ -150,7 +155,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+    const $svg = await component.waitForElement('svg');
 
     /* Assert */
     expect($svg.classList).toContain('fa-fw');
@@ -163,7 +168,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+    const $svg = await component.waitForElement('svg');
 
     /* Assert */
     expect($svg.classList).toContain('fa-inverse');
@@ -177,7 +182,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.classList).toContain('foo');
@@ -191,7 +196,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.getAttribute('rel')).toEqual('local');
@@ -208,7 +213,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.getAttribute('style')).toEqual('background: red;');
@@ -248,7 +253,7 @@ describe('the font awesome icon custom element', () => {
 
         /* Act */
         await component.create(bootstrap);
-        const $svg = document.querySelector('svg') as Element;
+        const $svg = await component.waitForElement('svg');
 
         /* Assert */
         expect($svg.classList).toContain(rec.className);
@@ -262,7 +267,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.classList).toContain('fa-flip-vertical');
@@ -277,7 +282,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+    const $svg = await component.waitForElement('svg');
 
     /* Assert */
     expect($svg.classList).toContain('fa-li');
@@ -292,7 +297,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.classList).toContain('fa-pull-' + pull);
@@ -306,7 +311,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+    const $svg = await component.waitForElement('svg');
 
     /* Assert */
     expect($svg.classList).toContain('fa-pulse');
@@ -321,7 +326,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.classList).toContain('fa-rotate-' + rotation);
@@ -335,7 +340,7 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
-    const $svg = document.querySelector('svg') as Element;
+    const $svg = await component.waitForElement('svg');
 
     /* Assert */
     expect($svg.classList).toContain('fa-spin');
@@ -350,7 +355,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.classList).toContain('fa-' + size);
@@ -375,7 +380,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.getAttribute('style')).toEqual('transform-origin: 0.375em 0.5em;');
@@ -390,7 +395,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.getAttribute('style')).toEqual('transform-origin: 0.375em 0.5em;');
@@ -432,7 +437,7 @@ describe('the font awesome icon custom element', () => {
 
         /* Act */
         await component.create(bootstrap);
-        const $svg = document.querySelector('svg') as Element;
+        const $svg = await component.waitForElement('svg');
         const $clipPath = $svg.querySelector('clipPath') as Element;
 
         /* Assert */
@@ -451,7 +456,7 @@ describe('the font awesome icon custom element', () => {
                          </font-awesome-icon>`).boundTo(context);
 
         await component.create(bootstrap);
-        const $svg = document.querySelector('svg') as Element;
+        const $svg = await component.waitForElement('svg');
         const $clipPathBefore = $svg.querySelector('clipPath') as Element;
         expect($clipPathBefore).toBeFalsy();
 
@@ -468,14 +473,14 @@ describe('the font awesome icon custom element', () => {
   });
 
   [ '1x', '2x' ].forEach(stack => {
-    it('stacks', async done => {
+    xit('stacks', async done => {
       /* Arrange */
       component.inView(`<font-awesome-icon icon="coffee" stack.bind="stack"></font-awesome-icon>`)
         .boundTo({ stack });
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       /* Assert */
       expect($svg.classList).toContain('fa-stack-' + stack);
@@ -484,26 +489,21 @@ describe('the font awesome icon custom element', () => {
   });
 
   describe('symbol', () => {
-    const spy = jest.spyOn(fontawesome, 'icon');
-
-    afterEach(() => {
-      spy.mockClear();
-    });
-
     it('will not create a symbol', async done => {
       /* Arrange */
+      iconSpy = jest.spyOn(fontawesome, 'icon');
       component.inView('<font-awesome-icon icon.bind="faCoffee"></font-awesome-icon>')
         .boundTo({ faCoffee });
 
       /* Act */
       await component.create(bootstrap);
-      const $symbol = document.querySelector('symbol') as Element;
+      const $symbol = await component.waitForElement('symbol', { present: false, timeout: 1000 });
 
       /* Assert */
       expect($symbol).toEqual(null);
-      expect(spy.mock.calls[0][1].symbol).toEqual(false);
+      expect(iconSpy.mock.calls[0][1].symbol).toEqual(false);
       done();
-    });
+    }, 6000);
 
     it('creates a symbol', async done => {
       /* Arrange */
@@ -512,12 +512,12 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $symbol = await component.waitForElement('symbol') as Element;
+      const $symbol = await component.waitForElement('symbol');
 
       /* Assert */
       expect($symbol.id).toEqual('coffee-icon');
       done();
-    }, 6000);
+    });
 
     it('creates a symbol when the property changes', async done => {
       const context: any = { }
@@ -531,7 +531,7 @@ describe('the font awesome icon custom element', () => {
       /* Act */
       context.symbol = 'coffee-icon';
 
-      const $symbol = await component.waitForElement('symbol') as Element;
+      const $symbol = await component.waitForElement('symbol');
 
       /* Assert */
       expect($symbol.id).toEqual('coffee-icon');
@@ -546,7 +546,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Act */
       await component.create(bootstrap);
-      const $svg = document.querySelector('svg') as Element;
+      const $svg = await component.waitForElement('svg');
 
       expect($svg.children[0].tagName).toEqual('title');
       expect($svg.children[0].textContent).toEqual('foobar');
@@ -603,7 +603,7 @@ describe('the font awesome icon custom element', () => {
         .boundTo(context);
 
       await component.create(bootstrap);
-      const $beforePropChange = document.querySelector('svg') as Element;
+      const $beforePropChange = await component.waitForElement('svg');
 
       /* Act */
       context[rec.prop] = rec.val as any;
@@ -614,7 +614,7 @@ describe('the font awesome icon custom element', () => {
 
       expect($afterPropChange.classList).toContain(rec.className);
       done();
-    }, 6000);
+    });
   });
 
   it('recompiles when the icon when it changes', async done => {
@@ -636,7 +636,7 @@ describe('the font awesome icon custom element', () => {
     expect($afterPropChange.classList).toContain('fa-circle');
     expect(document.querySelectorAll('font-awesome-icon').length).toEqual(1);
     done();
-  }, 6000);
+  });
 
   it('only creates one icon', async done => {
     /* Arrange */
@@ -666,11 +666,26 @@ describe('the font awesome icon custom element', () => {
 
     /* Act */
     await component.create(bootstrap);
+    await component.waitForElement('svg');
 
     /* Assert */
     expect(component.element.children.length).toEqual(1);
     expect(component.element.children[0].tagName).toEqual('svg');
     expect(component.element.children[0].id).toEqual('');
+    done();
+  });
+
+  it('only renders the icon once on attached', async done => {
+    /* Arrange */
+    iconSpy = jest.spyOn(fontawesome, 'icon');
+    component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>')
+
+    /* Act */
+    await component.create(bootstrap);
+    await component.waitForElement('svg');
+
+    /* Assert */
+    expect(iconSpy.mock.calls.length).toEqual(1);
     done();
   });
 });
