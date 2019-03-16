@@ -6,7 +6,6 @@ import {
   inlineView
 } from 'aurelia-framework';
 import {
-  AbstractElement,
   IconDefinition,
   IconLookup,
   IconName,
@@ -118,11 +117,6 @@ export class FontAwesomeIconCustomElement {
     }
   }
 
-  protected compile(abstract: AbstractElement): void {
-    const $icon = convert(DOM.createElement.bind(DOM), abstract);
-    this._iconhtml = $icon.outerHTML;
-  }
-
   /**
    * Get all non aurelia and non bound attributes and pass it to the
    * font awesome svg element
@@ -184,7 +178,8 @@ export class FontAwesomeIconCustomElement {
     if (!renderedIcon) {
       this.logger.error('Could not find icon', this.iconLookup);
     } else {
-      this.compile(renderedIcon.abstract[0]);
+      const $icon = convert(DOM.createElement.bind(DOM), renderedIcon.abstract[0]);
+      this._iconhtml = $icon.outerHTML;
     }
   }
 
