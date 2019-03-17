@@ -92,24 +92,16 @@ System.register(["aurelia-framework", "@fortawesome/fontawesome-svg-core", "./ut
                     this._iconhtml = '';
                 }
                 FontAwesomeIconCustomElement.inject = function () { return [Element]; };
-                FontAwesomeIconCustomElement.prototype.attached = function () {
-                    this.iconLookup = normalizeIconArgs(this.icon);
-                    if (this.iconLookup !== null) {
-                        this.renderIcon();
+                FontAwesomeIconCustomElement.prototype.bind = function () {
+                    this.createIcon();
+                };
+                FontAwesomeIconCustomElement.prototype.propertyChanged = function (prop) {
+                    if (prop === 'icon') {
+                        this.createIcon();
                     }
                     else {
-                        this.logger.error('Bound icon prop is either unsupported or null', this.icon);
+                        this.renderIcon();
                     }
-                };
-                FontAwesomeIconCustomElement.prototype.iconChanged = function () {
-                    this.attached();
-                };
-                FontAwesomeIconCustomElement.prototype.propertyChanged = function () {
-                    this.renderIcon();
-                };
-                FontAwesomeIconCustomElement.prototype.compile = function (abstract) {
-                    var $icon = converter_1.default(aurelia_framework_1.DOM.createElement.bind(aurelia_framework_1.DOM), abstract);
-                    this._iconhtml = $icon.outerHTML;
                 };
                 /**
                  * Get all non aurelia and non bound attributes and pass it to the
@@ -155,7 +147,17 @@ System.register(["aurelia-framework", "@fortawesome/fontawesome-svg-core", "./ut
                         this.logger.error('Could not find icon', this.iconLookup);
                     }
                     else {
-                        this.compile(renderedIcon.abstract[0]);
+                        var $icon = converter_1.default(aurelia_framework_1.DOM.createElement.bind(aurelia_framework_1.DOM), renderedIcon.abstract[0]);
+                        this._iconhtml = $icon.outerHTML;
+                    }
+                };
+                FontAwesomeIconCustomElement.prototype.createIcon = function () {
+                    this.iconLookup = normalizeIconArgs(this.icon);
+                    if (this.iconLookup !== null) {
+                        this.renderIcon();
+                    }
+                    else {
+                        this.logger.error('Bound icon prop is either unsupported or null', this.icon);
                     }
                 };
                 __decorate([
