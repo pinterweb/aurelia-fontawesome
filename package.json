@@ -33,7 +33,7 @@
     "doc": "cross-env typedoc --json doc/api.json --excludeExternals --includeDeclarations --excludePrivate --excludeProtected --mode modules --target ES6 --name aurelia-fontawesome-docs dist/doc-temp/",
     "postdoc": "cross-env node doc/shape-doc && rimraf dist/doc-temp",
     "prerelease": "npm run test && npm run build",
-    "release": "standard-version --infile ./doc/CHANGELOG.md"
+    "release": "git add dist/ && standard-version -a --infile ./doc/CHANGELOG.md"
   },
   "repository": {
     "type": "git",
