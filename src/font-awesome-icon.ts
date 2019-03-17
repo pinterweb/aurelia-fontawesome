@@ -6,7 +6,6 @@ import {
   inlineView
 } from 'aurelia-framework';
 import {
-  AbstractElement,
   IconDefinition,
   IconLookup,
   IconName,
@@ -106,27 +105,16 @@ export class FontAwesomeIconCustomElement {
 
   public constructor(private $element: Element) { }
 
-  public attached() {
-    this.iconLookup = normalizeIconArgs(this.icon);
+  public bind() {
+    this.createIcon();
+  }
 
-    if (this.iconLookup !== null) {
-      this.renderIcon();
+  public propertyChanged(prop: string) {
+    if (prop === 'icon') {
+      this.createIcon();
     } else {
-      this.logger.error('Bound icon prop is either unsupported or null', this.icon);
+      this.renderIcon();
     }
-  }
-
-  public iconChanged() {
-    this.attached();
-  }
-
-  public propertyChanged() {
-    this.renderIcon();
-  }
-
-  protected compile(abstract: AbstractElement): void {
-    const $icon = convert(DOM.createElement.bind(DOM), abstract);
-    this._iconhtml = $icon.outerHTML;
   }
 
   /**
@@ -190,7 +178,18 @@ export class FontAwesomeIconCustomElement {
     if (!renderedIcon) {
       this.logger.error('Could not find icon', this.iconLookup);
     } else {
-      this.compile(renderedIcon.abstract[0]);
+      const $icon = convert(DOM.createElement.bind(DOM), renderedIcon.abstract[0]);
+      this._iconhtml = $icon.outerHTML;
+    }
+  }
+
+  private createIcon() {
+    this.iconLookup = normalizeIconArgs(this.icon);
+
+    if (this.iconLookup !== null) {
+      this.renderIcon();
+    } else {
+      this.logger.error('Bound icon prop is either unsupported or null', this.icon);
     }
   }
 }
