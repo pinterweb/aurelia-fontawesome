@@ -65,24 +65,16 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
         this._iconhtml = '';
     }
     static inject() { return [Element]; }
-    attached() {
-        this.iconLookup = normalizeIconArgs(this.icon);
-        if (this.iconLookup !== null) {
-            this.renderIcon();
+    bind() {
+        this.createIcon();
+    }
+    propertyChanged(prop) {
+        if (prop === 'icon') {
+            this.createIcon();
         }
         else {
-            this.logger.error('Bound icon prop is either unsupported or null', this.icon);
+            this.renderIcon();
         }
-    }
-    iconChanged() {
-        this.attached();
-    }
-    propertyChanged() {
-        this.renderIcon();
-    }
-    compile(abstract) {
-        const $icon = convert(DOM.createElement.bind(DOM), abstract);
-        this._iconhtml = $icon.outerHTML;
     }
     /**
      * Get all non aurelia and non bound attributes and pass it to the
@@ -129,7 +121,17 @@ let FontAwesomeIconCustomElement = class FontAwesomeIconCustomElement {
             this.logger.error('Could not find icon', this.iconLookup);
         }
         else {
-            this.compile(renderedIcon.abstract[0]);
+            const $icon = convert(DOM.createElement.bind(DOM), renderedIcon.abstract[0]);
+            this._iconhtml = $icon.outerHTML;
+        }
+    }
+    createIcon() {
+        this.iconLookup = normalizeIconArgs(this.icon);
+        if (this.iconLookup !== null) {
+            this.renderIcon();
+        }
+        else {
+            this.logger.error('Bound icon prop is either unsupported or null', this.icon);
         }
     }
 };

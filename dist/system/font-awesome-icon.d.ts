@@ -1,4 +1,4 @@
-import { AbstractElement, IconDefinition, IconName, IconPrefix, Transform } from '@fortawesome/fontawesome-svg-core';
+import { IconDefinition, IconName, IconPrefix, Transform } from '@fortawesome/fontawesome-svg-core';
 declare type BoundIconArg = IconDefinition | IconName | Array<IconName | IconPrefix>;
 export declare class FontAwesomeIconCustomElement {
     private $element;
@@ -64,15 +64,14 @@ export declare class FontAwesomeIconCustomElement {
     private iconLookup;
     _iconhtml: string;
     constructor($element: Element);
-    attached(): void;
-    iconChanged(): void;
-    propertyChanged(): void;
-    protected compile(abstract: AbstractElement): void;
+    bind(): void;
+    propertyChanged(prop: string): void;
     /**
      * Get all non aurelia and non bound attributes and pass it to the
      * font awesome svg element
      */
     private getOtherAttributes;
     private renderIcon;
+    private createIcon;
 }
 export {};
