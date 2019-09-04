@@ -159,18 +159,17 @@ _foobar.html_
 
 To build the code, follow these steps.
 
-1. Ensure that [NodeJS](http://nodejs.org/) is installed. This provides the platform on which the build tooling runs.
-2. From the project folder, execute the following command:
+1. From the project folder, execute the following command:
 
   ```shell
   npm install
   ```
-3. To build the code, you can now run:
+2. To build the production files, run:
 
   ```shell
   npm run build
   ```
-4. You will find the compiled code in the `dist` folder, available in various module formats.
+3. You will find the compiled code in the `dist` folder, available in various module formats.
 
 ## Running The Tests
 
@@ -184,29 +183,13 @@ To run the unit tests, first ensure that you have followed the steps above in or
 2. For continuous tdd style:
 
   ```shell
-  npm run test-watch
-  ```
-3. You can find the coverage report built after each test run:
-
-  ```shell
-  cat /test/coverage-jest/index.html
+  npm run test:watch
   ```
 
 ## Running The Examples
 
-1. Change to the examples directory
-
-  ```shell
-  cd ./examples
-  ```
-
-2. Run npm
+1. From the project folder, execute the following command:
 
   ```shell
   npm start
   ```
-
-Kind of a pain to run examples while changing the source code to see your changes
-since npm linking will not work because aurelia's DOM not being available.
-
-For now I've included a build script `npm run build:examples` to generate a new tar.gz file

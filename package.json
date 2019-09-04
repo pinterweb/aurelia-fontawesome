@@ -64,11 +64,12 @@
   },
   "scripts": {
     "build": "au build-plugin",
-    "start": "au run",
+    "start": "au run --open",
     "prepare": "npm run build",
     "pretest": "au lint",
     "preversion": "au test",
     "test": "au test",
+    "test:watch": "au test --watch",
     "prerelease": "npm run test && npm run build",
     "release": "git add dist/ && standard-version --commit-all --infile ./doc/CHANGELOG.md"
   },
