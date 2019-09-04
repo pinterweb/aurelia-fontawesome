@@ -99,8 +99,6 @@ describe('the font awesome icon custom element', () => {
     ].forEach(rec => {
       it('logs an error with unsupported icon arg', async done => {
         /* Arrange */
-        try {
-
         component.inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
         .boundTo({ icon: rec.icon });
 
@@ -113,10 +111,6 @@ describe('the font awesome icon custom element', () => {
         expect(logger.error.calls.argsFor(0)[0]).toEqual('Bound icon prop is either unsupported or null');
         expect(logger.error.calls.argsFor(0)[1]).toBe(rec.icon);
         done();
-        } catch(e) {
-          console.log(e);
-          done();
-        }
       });
     });
 
@@ -691,5 +685,5 @@ describe('the font awesome icon custom element', () => {
     /* Assert */
     expect(iconSpy.calls.count()).toEqual(1);
     done();
-  }, 6000);
+  });
 });
