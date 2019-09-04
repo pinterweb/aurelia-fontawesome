@@ -1,31 +1,34 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "amd",
+    "noImplicitAny": false,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
     "target": "es5",
     "lib": [
-      "es2017",
+      "es2015",
       "dom"
     ],
-    "outDir": "dist/commonjs",
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "strictNullChecks": true,
-    "declaration": true,
-    "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization": false,
-    "experimentalDecorators": true,
-    "noEmitHelpers": false,
-    "strict": true,
-    "newLine": "LF",
-    "sourceMap": true
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "paths": {
+      "resources": [
+        ""
+      ]
+    },
+    "allowJs": false
   },
-  "exclude": [
-    "dist",
-    "doc",
-    "node_modules",
-    "examples"
-  ]
+  "include": [
+    "./src/**/*.ts",
+    "./dev-app/**/*.ts",
+    "./test/**/*.ts",
+    "./types/**/*.d.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }

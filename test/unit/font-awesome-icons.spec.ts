@@ -10,7 +10,7 @@ import {
 } from 'aurelia-testing';
 import {
   FontAwesomeIconCustomElement
-} from '../../src/aurelia-fontawesome';
+} from 'resources';
 import {
   createSpyObj,
   toHyphenCase
@@ -27,23 +27,21 @@ fontawesome.library.add(faCoffee, faCircle);
 describe('the font awesome icon custom element', () => {
   let component: ComponentTester<FontAwesomeIconCustomElement>;
   let logger: any;
-  let getLogger: jest.SpyInstance;
-  let iconSpy: jest.SpyInstance;
+  let getLogger: jasmine.Spy;
+  let iconSpy: jasmine.Spy;
 
   beforeEach(() => {
     component = StageComponent
     .withResources(
-      PLATFORM.moduleName('../../src/font-awesome-icon')
+      PLATFORM.moduleName('resources/font-awesome-icon')
     );
 
     logger = createSpyObj('logger', logging.Logger.prototype);
-    getLogger = jest.spyOn(logging, 'getLogger');
-    getLogger.mockReturnValue(logger);
+    getLogger = spyOn(logging, 'getLogger').and.returnValue(logger);
   });
 
   afterEach(() => {
     component.dispose();
-    jest.restoreAllMocks();
   });
 
   it('binds the default property values', async done => {
@@ -108,10 +106,10 @@ describe('the font awesome icon custom element', () => {
         await component.create(bootstrap);
 
         /* Assert */
-        expect(logger.error.mock.calls.length).toEqual(1);
+        expect(logger.error.calls.count()).toEqual(1);
         expect(getLogger).toHaveBeenCalledWith('aurelia-fontawesome');
-        expect(logger.error.mock.calls[0][0]).toEqual('Bound icon prop is either unsupported or null');
-        expect(logger.error.mock.calls[0][1]).toBe(rec.icon);
+        expect(logger.error.calls.argsFor(0)[0]).toEqual('Bound icon prop is either unsupported or null');
+        expect(logger.error.calls.argsFor(0)[1]).toBe(rec.icon);
         done();
       });
     });
@@ -129,8 +127,8 @@ describe('the font awesome icon custom element', () => {
         await component.create(bootstrap);
 
         /* Assert */
-        expect(logger.error.mock.calls[0][0]).toEqual('Could not find icon');
-        expect(logger.error.mock.calls[0][1]).toEqual({ prefix: 'fas', iconName: 'foo' });
+        expect(logger.error.calls.argsFor(0)[0]).toEqual('Could not find icon');
+        expect(logger.error.calls.argsFor(0)[1]).toEqual({ prefix: 'fas', iconName: 'foo' });
         done();
       });
     });
@@ -473,7 +471,7 @@ describe('the font awesome icon custom element', () => {
   });
 
   [ '1x', '2x' ].forEach(stack => {
-    xit('stacks', async done => {
+    it('stacks', async done => {
       /* Arrange */
       component.inView(`<font-awesome-icon icon="coffee" stack.bind="stack"></font-awesome-icon>`)
         .boundTo({ stack });
@@ -491,7 +489,7 @@ describe('the font awesome icon custom element', () => {
   describe('symbol', () => {
     it('will not create a symbol', async done => {
       /* Arrange */
-      iconSpy = jest.spyOn(fontawesome, 'icon');
+      iconSpy = spyOn(fontawesome, 'icon').and.callThrough();
       component.inView('<font-awesome-icon icon.bind="faCoffee"></font-awesome-icon>')
         .boundTo({ faCoffee });
 
@@ -501,7 +499,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Assert */
       expect($symbol).toEqual(null);
-      expect(iconSpy.mock.calls[0][1].symbol).toEqual(false);
+      expect(iconSpy.calls.argsFor(0)[1].symbol).toEqual(false);
       done();
     }, 6000);
 
@@ -677,7 +675,7 @@ describe('the font awesome icon custom element', () => {
 
   it('only renders the icon once on attached', async done => {
     /* Arrange */
-    iconSpy = jest.spyOn(fontawesome, 'icon');
+    iconSpy = spyOn(fontawesome, 'icon').and.callThrough();
     component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>')
 
     /* Act */
@@ -685,7 +683,7 @@ describe('the font awesome icon custom element', () => {
     await component.waitForElement('svg');
 
     /* Assert */
-    expect(iconSpy.mock.calls.length).toEqual(1);
+    expect(iconSpy.calls.count()).toEqual(1);
     done();
   });
 });

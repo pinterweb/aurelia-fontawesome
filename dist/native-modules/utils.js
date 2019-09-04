@@ -4,4 +4,3 @@ export function objectWithKey(key, value) {
         (!Array.isArray(value) && value)
         ? (_a = {}, _a[key] = value, _a) : {};
 }
-//# sourceMappingURL=utils.js.map

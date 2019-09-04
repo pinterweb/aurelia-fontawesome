@@ -15,6 +15,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 import { DOM, LogManager, bindable, customElement, inlineView } from 'aurelia-framework';
 import { icon, parse } from '@fortawesome/fontawesome-svg-core';
 import { objectWithKey } from './utils';
@@ -34,43 +44,19 @@ function normalizeIconArgs(icon) {
     }
     return null;
 }
-var FontAwesomeIconCustomElement = /** @class */ (function () {
+var FontAwesomeIconCustomElement = (function () {
     function FontAwesomeIconCustomElement($element) {
         this.$element = $element;
-        /**
-         * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
-         */
         this.border = false;
-        /**
-         * Your own class name that will be added to the SVGElement
-         */
         this.className = '';
-        /**
-         * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
-         */
         this.fixedWidth = false;
         this.inverse = false;
-        /**
-         * {@link https://fontawesome.com/how-to-use/on-the-web/styling/icons-in-a-list}
-         */
         this.listItem = false;
-        /**
-         * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
-         */
         this.pulse = false;
-        /**
-         * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
-         */
         this.spin = false;
         this.style = {};
-        /**
-         * {@link https://fontawesome.com/how-to-use/on-the-web/advanced/svg-symbols}
-         */
         this.symbol = false;
         this.title = '';
-        /**
-         * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
-         */
         this.transform = '';
         this.logger = LogManager.getLogger('aurelia-fontawesome');
         this._iconhtml = '';
@@ -87,10 +73,6 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
             this.renderIcon();
         }
     };
-    /**
-     * Get all non aurelia and non bound attributes and pass it to the
-     * font awesome svg element
-     */
     FontAwesomeIconCustomElement.prototype.getOtherAttributes = function () {
         var attrs = this.$element.attributes;
         var otherAttrs = {};
@@ -122,11 +104,11 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
             _a["fa-rotate-" + this.rotation] = !!this.rotation,
             _a["fa-stack-" + this.stack] = !!this.stack,
             _a);
-        var classObj = objectWithKey('classes', Object.keys(classes).filter(function (key) { return classes[key]; }).concat(this.className.split(' ')));
-        var otherIconParams = __assign({}, objectWithKey('mask', normalizeIconArgs(this.mask)), objectWithKey('transform', typeof this.transform === 'string'
+        var classObj = objectWithKey('classes', __spreadArrays(Object.keys(classes).filter(function (key) { return classes[key]; }), this.className.split(' ')));
+        var otherIconParams = __assign(__assign({}, objectWithKey('mask', normalizeIconArgs(this.mask))), objectWithKey('transform', typeof this.transform === 'string'
             ? parse.transform(this.transform)
             : this.transform));
-        var renderedIcon = icon(this.iconLookup, __assign({}, classObj, otherIconParams, { attributes: this.getOtherAttributes(), styles: this.style, symbol: this.symbol, title: this.title }));
+        var renderedIcon = icon(this.iconLookup, __assign(__assign(__assign({}, classObj), otherIconParams), { attributes: this.getOtherAttributes(), styles: this.style, symbol: this.symbol, title: this.title }));
         if (!renderedIcon) {
             this.logger.error('Could not find icon', this.iconLookup);
         }
@@ -145,64 +127,82 @@ var FontAwesomeIconCustomElement = /** @class */ (function () {
         }
     };
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Boolean)
     ], FontAwesomeIconCustomElement.prototype, "border", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", String)
     ], FontAwesomeIconCustomElement.prototype, "className", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Boolean)
     ], FontAwesomeIconCustomElement.prototype, "fixedWidth", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", String)
     ], FontAwesomeIconCustomElement.prototype, "flip", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Object)
     ], FontAwesomeIconCustomElement.prototype, "icon", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Boolean)
     ], FontAwesomeIconCustomElement.prototype, "inverse", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Boolean)
     ], FontAwesomeIconCustomElement.prototype, "listItem", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Object)
     ], FontAwesomeIconCustomElement.prototype, "mask", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", String)
     ], FontAwesomeIconCustomElement.prototype, "pull", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Boolean)
     ], FontAwesomeIconCustomElement.prototype, "pulse", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Number)
     ], FontAwesomeIconCustomElement.prototype, "rotation", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", String)
     ], FontAwesomeIconCustomElement.prototype, "size", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Boolean)
     ], FontAwesomeIconCustomElement.prototype, "spin", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Object)
     ], FontAwesomeIconCustomElement.prototype, "style", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Object)
     ], FontAwesomeIconCustomElement.prototype, "symbol", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", String)
     ], FontAwesomeIconCustomElement.prototype, "title", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", Object)
     ], FontAwesomeIconCustomElement.prototype, "transform", void 0);
     __decorate([
-        bindable
+        bindable,
+        __metadata("design:type", String)
     ], FontAwesomeIconCustomElement.prototype, "stack", void 0);
     FontAwesomeIconCustomElement = __decorate([
         customElement('font-awesome-icon'),
-        inlineView("<template innerhtml.bind=\"_iconhtml\"></template>")
+        inlineView("<template innerhtml.bind=\"_iconhtml\"></template>"),
+        __metadata("design:paramtypes", [Element])
     ], FontAwesomeIconCustomElement);
     return FontAwesomeIconCustomElement;
 }());
 export { FontAwesomeIconCustomElement };
-//# sourceMappingURL=font-awesome-icon.js.map
