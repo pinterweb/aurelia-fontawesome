@@ -1,6 +1,7 @@
 # aurelia-fontawesome
 > Font Awesome 5 Aurelia component using SVG with JS
 
+[![Build Status](https://dev.azure.com/parkeremg/aurelia-fontawesome/_apis/build/status/pinterweb.aurelia-fontawesome?branchName=master)](https://dev.azure.com/parkeremg/aurelia-fontawesome/_build/latest?definitionId=79&branchName=master)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 Inspired by:
