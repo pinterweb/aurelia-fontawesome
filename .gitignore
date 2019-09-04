@@ -1,7 +1,9 @@
+# Dependencies
 node_modules
-test/coverage-jest/
-dist/doc-temp
-*.swp
-npm-debug.log
-tags*
-*.tgz
+
+# Compiled files
+/scripts
+/src/environment.js
+/src/environment.ts
+/dist
+/test/coverage-karma

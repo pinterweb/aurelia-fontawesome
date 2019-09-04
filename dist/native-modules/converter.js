@@ -16,4 +16,3 @@ function convert(createElement, element) {
     return $el;
 }
 export default convert;
-//# sourceMappingURL=converter.js.map

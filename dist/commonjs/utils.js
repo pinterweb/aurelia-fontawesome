@@ -7,4 +7,3 @@ function objectWithKey(key, value) {
         ? (_a = {}, _a[key] = value, _a) : {};
 }
 exports.objectWithKey = objectWithKey;
-//# sourceMappingURL=utils.js.map

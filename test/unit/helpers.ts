@@ -7,20 +7,13 @@ export const toCamelCase = (str: string ): string => {
 };
 
 export function createSpyObj(name: string, prototype: any) {
-  if (!prototype) {
-    throw Error('obj to fake required');
-  }
-  if (!name) {
-    throw Error('name for the fake obj required');
-  }
+  if (!prototype) throw Error("obj to fake required");
+  if (!name) throw Error("name for the fake obj required");
 
-  const obj: any = {};
+  const keys = [];
+  for (let key in prototype) keys.push(key);
 
-  for (let key in prototype) {
-    obj[key] = jest.fn();
-  }
-
-  return obj;
+  return keys.length > 0 ? jasmine.createSpyObj(name, keys) : {};
 }
 
 export const toHyphenCase = (str: string): string => {

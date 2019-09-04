@@ -6,15 +6,15 @@ import {
 } from './helpers'
 import {
   configure
-} from '../../src/aurelia-fontawesome';
+} from 'resources/index';
 
 describe('aurelia setup', () => {
   it('registers the custom element in global resources', () => {
-    const aurelia: FrameworkConfiguration = createSpyObj('config', FrameworkConfiguration.prototype);
+    const aurelia: jasmine.SpyObj<FrameworkConfiguration> = createSpyObj('config', FrameworkConfiguration.prototype);
 
     configure(aurelia);
 
-    expect(aurelia.globalResources).toHaveBeenCalledWith('./font-awesome-icon');
-    expect(aurelia.globalResources).toHaveBeenCalledTimes(1);
+    expect(aurelia.globalResources).toHaveBeenCalledWith([ './font-awesome-icon' ]);
+    expect(aurelia.globalResources.calls.count()).toEqual(1);;
   });
 });
