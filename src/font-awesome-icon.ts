@@ -1,23 +1,36 @@
+import { DOM } from 'aurelia-pal';
 import {
-  DOM,
   LogManager,
-  bindable,
   customElement,
+  bindable,
   inlineView
 } from 'aurelia-framework';
 import {
-  IconDefinition,
-  IconLookup,
-  IconName,
-  IconPrefix,
-  Transform,
   icon,
   parse
 } from '@fortawesome/fontawesome-svg-core';
 import { objectWithKey } from './utils';
 import convert from './converter';
+import { PluginIconVisitor } from './plugin-icon-visitor';
 
-type BoundIconArg = IconDefinition | IconName | Array<IconName | IconPrefix>;
+type IconDefinition = import('@fortawesome/fontawesome-svg-core').IconDefinition;
+type IconLookup = import('@fortawesome/fontawesome-svg-core').IconLookup;
+type IconPrefix = import('@fortawesome/fontawesome-svg-core').IconPrefix;
+type IconName = import('@fortawesome/fontawesome-svg-core').IconName;
+
+type IconOptions = import('./index').IconOptions;
+type FlipOption = import('./index').FlipOption;
+type PullOption = import('./index').PullOption;
+type RotationOption = import('./index').RotationOption;
+type BoundIconArg = import('./index').BoundIconArg;
+type SizeOption = import('./index').SizeOption;
+type SymbolOption = import('./index').SymbolOption;
+type TransformOption = import('./index').TransformOption;
+type StackOption = import('./index').StackOption;
+
+export interface FontAwesomeIconCustomElementVisitor {
+  visit(iconElement: FontAwesomeIconCustomElement);
+}
 
 function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | null {
   if (icon == null) {
@@ -41,69 +54,35 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
 
 @customElement('font-awesome-icon')
 @inlineView(`<template innerhtml.bind="_iconhtml"></template>`)
-export class FontAwesomeIconCustomElement {
-  public static inject() { return [Element]; }
+export class FontAwesomeIconCustomElement implements IconOptions {
+  public static inject() { return [Element, PluginIconVisitor ]; }
 
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/bordered-pulled-icons}
-   */
-  @bindable public border: boolean = false;
-  /**
-   * Your own class name that will be added to the SVGElement
-   */
-  @bindable public className: string = '';
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons}
-   */
-  @bindable public fixedWidth: boolean = false;
-  @bindable public flip: 'horizontal' | 'vertical' | 'both';
+  @bindable public border;
+  @bindable public className;
+  @bindable public fixedWidth;
+  @bindable public flip: FlipOption;
   @bindable public icon: BoundIconArg;
-  @bindable public inverse: boolean = false;
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/icons-in-a-list}
-   */
-  @bindable public listItem: boolean = false;
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/masking}
-   */
-  @bindable public mask?: BoundIconArg;
-  @bindable public pull: 'right' | 'left';
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
-   */
-  @bindable public pulse: boolean = false;
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/rotating-icons}
-   */
-  @bindable public rotation?: 90 | 180 | 270;
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons}
-   */
-  @bindable public size?: 'lg' |'xs' |'sm' |'1x' |'2x' |'3x' |'4x' |'5x' |'6x' |'7x' |'8x' |'9x' |'10x';
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons}
-   */
-  @bindable public spin: boolean = false;
-  @bindable public style: any = {};
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/advanced/svg-symbols}
-   */
-  @bindable public symbol: boolean | string = false;
-  @bindable public title: string = '';
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/power-transforms}
-   */
-  @bindable public transform: string | Transform = '';
-  /**
-   * {@link https://fontawesome.com/how-to-use/on-the-web/styling/stacking-icons}
-   */
-  @bindable public stack?: '1x' | '2x';
+  @bindable public inverse;
+  @bindable public listItem;
+  @bindable public mask: BoundIconArg;
+  @bindable public pull: PullOption;
+  @bindable public pulse;
+  @bindable public rotation: RotationOption;
+  @bindable public size: SizeOption;
+  @bindable public spin;
+  @bindable public style;
+  @bindable public symbol: SymbolOption;
+  @bindable public title;
+  @bindable public transform: TransformOption;
+  @bindable public stack: StackOption;
 
   private logger = LogManager.getLogger('aurelia-fontawesome');
   private iconLookup: any;
   _iconhtml: string = '';
 
-  public constructor(private $element: Element) { }
+  public constructor(private $element: Element, visitor: FontAwesomeIconCustomElementVisitor) {
+    visitor.visit(this);
+  }
 
   public bind() {
     this.createIcon();
@@ -155,7 +134,7 @@ export class FontAwesomeIconCustomElement {
     };
     const classObj =  objectWithKey('classes', [
       ...Object.keys(classes).filter(key => classes[key]),
-      ...this.className.split(' ')
+      ...(this.className ? this.className.split(' ') : [])
     ]);
     const otherIconParams = {
       ...objectWithKey('mask', normalizeIconArgs(this.mask)),

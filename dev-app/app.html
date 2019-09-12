@@ -2,6 +2,7 @@
   <h1 class="title">${message}</h1>
 
   <div style="overflow-x:auto">
+    <button click.delegate="dynamicIcons=dynamicIcons+1">Insert Row</button>
     <table class="table">
       <thead>
         <tr>
@@ -11,6 +12,10 @@
       </thead>
       <tbody>
         <tr>
+          <td>Basic</td>
+          <td><font-awesome-icon icon="home"></font-awesome-icon></td>
+        </tr>
+        <tr repeat.for="i of dynamicIcons">
           <td>Basic</td>
           <td><font-awesome-icon icon="home"></font-awesome-icon></td>
         </tr>
