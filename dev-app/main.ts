@@ -5,6 +5,7 @@ import {
   faHome,
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
+import { fab  } from '@fortawesome/free-brands-svg-icons'
 import './styles.css';
 
 export function configure(aurelia: Aurelia) {
@@ -20,7 +21,7 @@ export function configure(aurelia: Aurelia) {
     // The "resources" is mapped to "../src" in aurelia.json "paths"
     .feature('resources', {
       iconOptions: options,
-      icons: [ faCircle, faHome, faSpinner ]
+      icons: [ fab, faCircle, faHome, faSpinner ]
     });
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
