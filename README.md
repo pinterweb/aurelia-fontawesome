@@ -11,8 +11,8 @@ Inspired by:
 
 - [Installation](#installation)
 - [Usage](#usage)
-  * [Zero Configuration](#zero-config)
-  * [Global Configuration](#global-config)
+  * [Zero Configuration](#zero-configuration)
+  * [Global Configuration](#global-configuration)
   * [Explicit Import](#explicit-import)
   * [Non FAS Icons](#non-fas-icons)
   * [Binding Variations](#binding-variations)
