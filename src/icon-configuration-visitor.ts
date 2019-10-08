@@ -1,4 +1,9 @@
-import { FontAwesomeIconCustomElement } from './font-awesome-icon';
+import {
+  FontAwesomeIconCustomElement
+} from './font-awesome-icon';
+import {
+  LogManager
+} from 'aurelia-framework';
 
 type IconOptions = import('./index').IconOptions;
 type IconVisitor = import('./font-awesome-icon').FontAwesomeIconCustomElementVisitor;
@@ -17,14 +22,15 @@ const defaultIconOptions: IconOptions = {
   rotation: null,
   size: null,
   spin: false,
+  stack: null,
   style: {},
   symbol: null,
   title: '',
-  transform: '',
-  stack: null
+  transform: ''
 }
 
 export class IconConfigurationVisitor implements IconVisitor {
+  _logger = LogManager.getLogger('aurelia-fontawesome');
   _overrideOptions: Partial<IconOptions>
 
   constructor(private iconOptions: Partial<IconOptions>) {
@@ -32,11 +38,17 @@ export class IconConfigurationVisitor implements IconVisitor {
   }
 
   visit(iconElement: FontAwesomeIconCustomElement) {
-    for (const key in defaultIconOptions) {
-      const overrideValue = this._overrideOptions[key];
+    if (!iconElement) {
+      this._logger.error('IconConfigurationVisitor: icon could not be configured because ' +
+                        'it was not passed into the `visit()` method');
 
-      iconElement[key] =
-        (typeof(overrideValue) !== 'undefined' ? overrideValue : defaultIconOptions[key]);
+    } else {
+      for (const key in defaultIconOptions) {
+        const overrideValue = this._overrideOptions[key];
+
+        iconElement[key] =
+          (typeof(overrideValue) !== 'undefined' ? overrideValue : defaultIconOptions[key]);
+      }
     }
   }
 }

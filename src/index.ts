@@ -55,16 +55,21 @@ export function configure(aurelia: FrameworkConfiguration, options: any | Partia
     PLATFORM.moduleName('./font-awesome-icon')
   ]);
 
-  const _options: Partial<IconOptions> = {}
-
-  if (!options.icons || options.icons.length == 0) {
-    LogManager.getLogger('aurelia-fontawesome').warn("No icons loaded");
-  } else {
+  if (options && options.icons && options.icons.length !== 0) {
     library.add(...options.icons);
+  } else {
+    LogManager
+      .getLogger('aurelia-fontawesome')
+      .warn('No icons loaded. You must use "Explicit Loading" or call use ' +
+            '`library.add()` on the font awesome Library interface');
   }
+
   aurelia.container.registerSingleton(PluginIconVisitor, PluginIconVisitor)
-  aurelia.container.registerInstance(
-    IconVisitorInjectionKey,
-    new IconConfigurationVisitor(options.iconOptions)
-  );
+
+  if (options && options.iconOptions) {
+    aurelia.container.registerInstance(
+      IconVisitorInjectionKey,
+      new IconConfigurationVisitor(options.iconOptions)
+    );
+  }
 }

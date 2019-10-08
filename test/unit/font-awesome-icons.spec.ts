@@ -9,8 +9,9 @@ import {
   ComponentTester
 } from 'aurelia-testing';
 import {
-  FontAwesomeIconCustomElement
-} from 'resources';
+  FontAwesomeIconCustomElement,
+  FontAwesomeIconCustomElementVisitor
+} from 'resources/font-awesome-icon';
 import {
   createSpyObj,
   toHyphenCase
@@ -19,6 +20,7 @@ import {
   faCoffee,
   faCircle
 } from './icons';
+import { IconVisitorInjectionKey } from 'resources/plugin-icon-visitor';
 import * as fontawesome from '@fortawesome/fontawesome-svg-core';
 import * as logging from 'aurelia-logging';
 
@@ -29,6 +31,7 @@ describe('the font awesome icon custom element', () => {
   let logger: any;
   let getLogger: jasmine.Spy;
   let iconSpy: jasmine.Spy;
+  let visitorSpy: jasmine.SpyObj<FontAwesomeIconCustomElementVisitor>;
 
   beforeEach(() => {
     component = StageComponent
@@ -38,13 +41,40 @@ describe('the font awesome icon custom element', () => {
 
     logger = createSpyObj('logger', logging.Logger.prototype);
     getLogger = spyOn(logging, 'getLogger').and.returnValue(logger);
+    visitorSpy = jasmine.createSpyObj('visitor', [ 'visit' ]);
+
+    // XXX this is important. if the visitor is moved from the ctor to `created()`,
+    // which would be the next logical place. aurelia fires the `propertyChanged()` before
+    // the first binding has occurred, which we do not want since we want the icon first
+    // initialized, the `propertyChanged()` is used to watch changes
+    visitorSpy.visit.and.callFake((icon) => {
+      icon.className = 'foobar';
+    });
+
+    component.configure = aurelia => {
+      aurelia.container.registerInstance(IconVisitorInjectionKey, visitorSpy);
+      return aurelia.use.standardConfiguration();
+    };
   });
 
   afterEach(() => {
     component.dispose();
   });
 
-  it('binds the default property values', async done => {
+  it('calls the visitor with self during initialization', async done => {
+    /* Arrange */
+    component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>');
+
+    /* Act */
+    await component.create(bootstrap);
+
+    /* Assert */
+    expect(visitorSpy.visit.calls.count()).toEqual(1);
+    expect(visitorSpy.visit).toHaveBeenCalledWith(jasmine.any(FontAwesomeIconCustomElement));
+    done();
+  });
+
+  it('creates the icon with no attributes', async done => {
     /* Arrange */
     component.inView('<font-awesome-icon icon="coffee"></font-awesome-icon>');
 
@@ -73,7 +103,7 @@ describe('the font awesome icon custom element', () => {
     [ 'fas', 'coffee' ],
     'coffee'
   ].forEach(icon => {
-    it('accepts an icon definition, string or array', async done => {
+    it('accepts an icon definition, array or string for binding the icon', async done => {
       /* Arrange */
       component.inView('<font-awesome-icon icon.bind="icon"></font-awesome-icon>')
         .boundTo({ icon });
@@ -160,7 +190,7 @@ describe('the font awesome icon custom element', () => {
     done();
   });
 
-  it('uses a inverse', async done => {
+  it('uses the inverse', async done => {
     /* Arrange */
     component.inView('<font-awesome-icon icon="coffee" inverse.bind="true"></font-awesome-icon>');
 
@@ -499,7 +529,7 @@ describe('the font awesome icon custom element', () => {
 
       /* Assert */
       expect($symbol).toEqual(null);
-      expect(iconSpy.calls.argsFor(0)[1].symbol).toEqual(false);
+      expect(iconSpy.calls.argsFor(0)[1].symbol).not.toBeDefined()
       done();
     }, 6000);
 
