@@ -1,19 +1,9 @@
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  border: 1px solid #ddd;
+.card-header {
+  justify-content: center;
+  height: 50px;
 }
 
-table thead th {
-  border-width: 0 0 2px;
-}
-
-th, td {
-  text-align: left;
-  padding: 8px;
-  border-bottom: 1px solid #dbdbdb;
-}
-
-.has-text-primary {
-  color: hsl(217, 71%, 53%);
+.card {
+  margin-right: 0.75em;
+  margin-bottom: 0.75em;
 }

@@ -4,16 +4,18 @@ import {
   faCircle,
   faHome,
   faSpinner,
+  faCoffee,
+  faMugHot
 } from '@fortawesome/free-solid-svg-icons';
 import { fab  } from '@fortawesome/free-brands-svg-icons'
 import './styles.css';
 
 export function configure(aurelia: Aurelia) {
   const options = {
-    spin: true
+    rotation: 0
   };
 
-  setInterval(() => options.spin = !options.spin, 5000);
+  aurelia.container.registerInstance("globalOptions", options);
 
   aurelia.use
     .standardConfiguration()
@@ -21,7 +23,7 @@ export function configure(aurelia: Aurelia) {
     // The "resources" is mapped to "../src" in aurelia.json "paths"
     .feature('resources', {
       iconOptions: options,
-      icons: [ fab, faCircle, faHome, faSpinner ]
+      icons: [ fab, faCircle, faHome, faSpinner, faCoffee, faMugHot ]
     });
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
