@@ -15,7 +15,7 @@ export function configure(aurelia: Aurelia) {
     rotation: 0
   };
 
-  aurelia.container.registerInstance("globalOptions", options);
+  aurelia.container.registerInstance('globalOptions', options);
 
   aurelia.use
     .standardConfiguration()

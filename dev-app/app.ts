@@ -1,6 +1,6 @@
-import { inject } from "aurelia-framework";
+import { inject } from 'aurelia-framework';
 
-@inject("globalOptions")
+@inject('globalOptions')
 export class App {
   message = 'Aurelia Font Awesome 5 Examples';
   icon = 'coffee'
