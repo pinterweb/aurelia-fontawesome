@@ -11,10 +11,11 @@ Inspired by:
 
 - [Installation](#installation)
 - [Usage](#usage)
+  * [Zero Configuration](#zero-config)
+  * [Global Configuration](#global-config)
   * [Explicit Import](#explicit-import)
-  * [Build a Library to Reference Icons Throughout Your App More Conveniently](#build-a-library-to-reference-icons-throughout-your-app-more-conveniently)
   * [Non FAS Icons](#non-fas-icons)
-  * [In Summary](#in-summary)
+  * [Binding Variations](#binding-variations)
 - [Dependencies](#dependencies)
 - [Building the Code](#building-the-code)
 - [Running the tests](#running-the-tests)
@@ -27,7 +28,7 @@ Inspired by:
 $ npm i --save @fortawesome/fontawesome-svg-core
 ```
 
-**Select on or all icon libraries**
+**Select one or all icon libraries**
 ```
 $ npm i --save @fortawesome/free-solid-svg-icons
 $ npm i --save @fortawesome/free-regular-svg-icons
@@ -43,6 +44,7 @@ $ npm i --save aurelia-fontawesome
 
 In your Aurelia bootstrap file, add the plugin:
 
+### Zero Configuration
 ```javascript
 import { PLATFORM } from 'aurelia-framework';
 
@@ -50,6 +52,24 @@ export function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
     .plugin(PLATFORM.moduleName('aurelia-fontawesome'));
+
+  // other code ...
+
+  return aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
+}
+```
+
+### Global Configuration
+```javascript
+import { PLATFORM } from 'aurelia-framework';
+
+export function configure(aurelia) {
+  aurelia.use
+    .standardConfiguration()
+    .plugin(PLATFORM.moduleName('aurelia-fontawesome'), {
+      iconOptions: { /* bindable property defaults here (e.g rotation: 0) */ },,
+      icons: [ fab, faCircle, faHome, faSpinner, faCoffee, faMugHot ]
+    });
 
   // other code ...
 
@@ -80,48 +100,6 @@ _foobar.html_
 > thousands of icons to include only those you use in your final bundled file.
 > for an alternative approach check out webpack loader [aurelia-fontawesome-loader](https://github.com/rmja/aurelia-fontawesome-loader)
 
-### Build a Library to Reference Icons Throughout Your App More Conveniently
-_main.js_
-```javascript
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons'
-
-library.add(fab, faCheckSquare, faCoffee)
-
-export function configure(aurelia) {
-  aurelia.use
-    .standardConfiguration()
-    .plugin(PLATFORM.moduleName('aurelia-fontawesome'));
-
-  // other code ...
-
-  return aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
-}
-```
-
-> `fab`: which represents _all_ of the brand icons in `@fortawesome/free-brands-svg-icons`.
-
-> `faCheckSquare` and `faCoffee`: Adding each of these icons individually
->  allows us to refer to them throughout our app by their icon string names,
->  `"check-square"` and `"coffee"`, respectively.
-
-Then your view/view-model would look like this if using the coffee icon
-
-_foobar.js_
-```javascript
-export class FooBarViewModel { }
-```
-
-_foobar.html_
-```html
-<template>
-  <font-awesome-icon icon="coffee"></font-awesome-icon>
-</template>
-```
-> Notice "coffee" is just a string
-
-
 ### Non FAS icons
 _foobar.js_
 ```javascript
@@ -145,7 +123,7 @@ _foobar.html_
 > different prefix for them—not the default `fas`, but `fab`, for Font Awesome
 
 
-### In Summary
+### Binding Variations
 - The icon can be an icon object, like `icon.bind=${faCoffee}`.
 - The icon can be a string, like `icon="coffee"`.
 - The icon can be an `Array` of strings, where the first element is a prefix,
