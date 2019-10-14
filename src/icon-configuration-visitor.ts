@@ -26,7 +26,8 @@ const defaultIconOptions: IconOptions = {
   style: {},
   symbol: null,
   title: '',
-  transform: ''
+  transform: '',
+  prefix: 'fas'
 }
 
 export class IconConfigurationVisitor implements IconVisitor {

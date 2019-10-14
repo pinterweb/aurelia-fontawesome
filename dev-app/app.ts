@@ -1,16 +1,25 @@
 import { inject } from 'aurelia-framework';
 
-@inject('globalOptions')
+@inject('defaultOptions')
 export class App {
   message = 'Aurelia Font Awesome 5 Examples';
   icon = 'coffee'
-  coffeeSpilled = false;
+  rotated = false;
+  prefix = 'fas';
 
   constructor(private _options) {
   }
 
-  spillGlobal() {
+  attached() {
+    this._options.prefix = 'far'
+  }
+
+  changeRotation() {
     this._options.rotation = !this._options.rotation ? 270 : 0;
-    this.coffeeSpilled = !this.coffeeSpilled;
+    this.rotated = !this.rotated;
+  }
+
+  changePrefix() {
+    this.prefix = !this.prefix ? 'fas' : null;
   }
 }

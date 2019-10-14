@@ -46,6 +46,7 @@ export interface IconOptions {
   title: string;
   transform: TransformOption;
   stack?: StackOption;
+  prefix: IconPrefix;
 }
 
 type IconOptionsType = IconOptions;
