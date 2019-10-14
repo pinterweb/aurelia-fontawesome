@@ -1,27 +1,29 @@
 import { Aurelia } from 'aurelia-framework'
 import environment from './environment';
 import {
-  library
-} from '@fortawesome/fontawesome-svg-core';
-import {
   faCircle,
   faHome,
-  faSpinner
+  faSpinner,
+  faCoffee,
+  faMugHot
 } from '@fortawesome/free-solid-svg-icons';
-import './styles.css';
-
-library.add(
-  faCircle,
-  faHome,
-  faSpinner
-);
+import { fab  } from '@fortawesome/free-brands-svg-icons'
 
 export function configure(aurelia: Aurelia) {
+  const options = {
+    rotation: 0
+  };
+
+  aurelia.container.registerInstance('globalOptions', options);
+
   aurelia.use
     .standardConfiguration()
     // load the plugin ../src
     // The "resources" is mapped to "../src" in aurelia.json "paths"
-    .feature('resources');
+    .feature('resources', {
+      iconOptions: options,
+      icons: [ fab, faCircle, faHome, faSpinner, faCoffee, faMugHot ]
+    });
 
   aurelia.use.developmentLogging(environment.debug ? 'debug' : 'warn');
 

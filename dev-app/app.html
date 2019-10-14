@@ -1,53 +1,110 @@
 <template>
-  <h1 class="title">${message}</h1>
+  <require from="./styles.css"></require>
 
-  <div style="overflow-x:auto">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Usage</th>
-          <th>Icon(s)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Basic</td>
-          <td><font-awesome-icon icon="home"></font-awesome-icon></td>
-        </tr>
-        <tr>
-          <td>Sizes</td>
-          <td>
-            <font-awesome-icon size="xs" icon="home"></font-awesome-icon>
-            <font-awesome-icon size="2x" icon="home"></font-awesome-icon>
-          </td>
-        </tr>
-        <tr>
-          <td>User Attributes</td>
-          <td>
-            <font-awesome-icon class="has-text-primary" icon="home"></font-awesome-icon>
-          </td>
-        </tr>
-        <tr>
-          <td>Animations</td>
-          <td>
-            <font-awesome-icon icon="spinner" spin.bind="true"></font-awesome-icon>
-            <font-awesome-icon icon="spinner" pulse.bind="true"></font-awesome-icon>
-          </td>
-        </tr>
-        <tr>
-          <td>Masking</td>
-          <td>
-            <font-awesome-icon icon="home" mask="circle" size="3x"></font-awesome-icon>
-          </td>
-        </tr>
-        <tr>
-          <td>Reactive</td>
-          <td>
-            <font-awesome-icon icon.bind="icon"></font-awesome-icon>
-            <button click.delegate="icon=(icon==='home' ? 'circle' : 'home')">Change</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h1 class="title has-text-centered">${message}</h1>
+  <h2 class="subtitle has-text-centered">(Most examples use the size attribute for better display)</h2>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column card">
+          <div class="card-header is-centered">
+            <font-awesome-icon icon="coffee"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">Zero Configuration</p>
+          </div>
+        </div>
+        <div class="card column">
+          <div class="card-header is-centered">
+            <font-awesome-icon size="xs" icon="coffee"></font-awesome-icon>
+            <font-awesome-icon size="lg" icon="coffee"></font-awesome-icon>
+            <font-awesome-icon size="2x" icon="coffee"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">Sizes</p>
+            <div class="content">
+              <a href="https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons">
+                Sizing Icons
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="card column">
+          <div class="card-header is-centered">
+            <font-awesome-icon size="2x" class="has-text-danger" icon="coffee"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">HTML Attributes</p>
+          </div>
+        </div>
+        <div class="card column">
+          <div class="card-header is-centered">
+            <font-awesome-icon size="2x" icon="spinner" spin.bind="true"></font-awesome-icon>
+            <font-awesome-icon size="2x" icon="spinner" pulse.bind="true"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">Animations</p>
+            <div class="content">
+              <a href="https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons">
+                Animating Icons
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column card">
+          <div class="card-header is-centered">
+            <font-awesome-icon size="2x" icon="home" mask="circle" size="3x"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">Masking</p>
+            <div class="content">
+              <a target="_blank" href="https://fontawesome.com/how-to-use/on-the-web/styling/masking">
+                Masking Icons
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="column card">
+          <div class="card-header is-centered">
+            <font-awesome-icon size="2x" icon.bind="icon"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">Reactive</p>
+            <div class="content">
+              <button
+                class="button"
+                click.delegate="icon=(icon==='coffee' ? 'mug-hot' : 'coffee')">
+                Brew
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="column card">
+          <div class="card-header is-centered">
+            <font-awesome-icon size="2x" icon.bind="[ 'fab', 'microsoft' ]"></font-awesome-icon>
+            +
+            <font-awesome-icon size="2x" icon.bind="[ 'fab', 'github' ]"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">Brand Icons</p>
+          </div>
+        </div>
+        <div class="column card">
+          <div class="card-header is-centered">
+            <font-awesome-icon size="2x" if.bind="!coffeeSpilled" icon="coffee"></font-awesome-icon>
+            <font-awesome-icon size="2x" if.bind="coffeeSpilled" icon="mug-hot"></font-awesome-icon>
+          </div>
+          <div class="card-content">
+            <p class="title is-4">Global Configuration</p>
+            <div class="content">
+              <button class="button" click.delegate="spillGlobal()">Spill</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
