@@ -567,7 +567,7 @@ describe('the font awesome icon custom element', () => {
     });
   });
 
-  describe('the title property', () => {
+  describe('title property', () => {
     it('adds a title element', async done => {
       /* Arrange */
       component.inView('<font-awesome-icon icon="coffee" title="foobar"></font-awesome-icon>');

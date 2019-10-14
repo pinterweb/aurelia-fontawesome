@@ -7,7 +7,7 @@ function convert(createElement: (tag: string) => Element, element: AbstractEleme
     if (typeof child === 'string') {
       return child;
     }
-    
+
     return convert(createElement, child);
   });
 
@@ -19,7 +19,7 @@ function convert(createElement: (tag: string) => Element, element: AbstractEleme
     }
   }
 
-  $el.innerHTML = children.map(child => child.outerHTML || child).join('');
+  children.forEach(c => typeof(c) === 'string' ? $el.textContent = c : $el.appendChild(c));
 
   return $el;
 }

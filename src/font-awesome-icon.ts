@@ -3,7 +3,12 @@ import {
   LogManager,
   customElement,
   bindable,
-  inlineView
+  ViewCompiler,
+  ViewResources,
+  ViewSlot,
+  Container,
+  OverrideContext,
+  noView
 } from 'aurelia-framework';
 import {
   icon,
@@ -53,9 +58,9 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
 }
 
 @customElement('font-awesome-icon')
-@inlineView(`<template innerhtml.bind="_iconhtml"></template>`)
+@noView()
 export class FontAwesomeIconCustomElement implements IconOptions {
-  public static inject() { return [Element, PluginIconVisitor ]; }
+  public static inject = [Element, Container, ViewResources, ViewCompiler, ViewSlot, PluginIconVisitor ]
 
   @bindable public border: boolean;
   @bindable public className: string;
@@ -72,19 +77,31 @@ export class FontAwesomeIconCustomElement implements IconOptions {
   @bindable public spin: boolean;
   @bindable public style: {[key: string]: string};
   @bindable public symbol: SymbolOption;
-  @bindable public title;
+  @bindable public title: string;
   @bindable public transform: TransformOption;
   @bindable public stack: StackOption;
 
   private logger = LogManager.getLogger('aurelia-fontawesome');
   private iconLookup: any;
   _iconhtml: string = '';
+  _bindingContext: any;
 
-  public constructor(private $element: Element, visitor: FontAwesomeIconCustomElementVisitor) {
-    visitor.visit(this);
+  public constructor(
+    private $element: Element,
+    private _container: Container,
+    private _resources: ViewResources,
+    private _compiler: ViewCompiler,
+    private _slot: ViewSlot,
+    _visitor: FontAwesomeIconCustomElementVisitor
+  ) {
+    _visitor.visit(this);
   }
 
-  public bind() {
+  public bind(bindingContext: any, _: OverrideContext) {
+    this._bindingContext = bindingContext;
+  }
+
+  public attached() {
     this.createIcon();
   }
 
@@ -158,8 +175,21 @@ export class FontAwesomeIconCustomElement implements IconOptions {
       this.logger.error('Could not find icon', this.iconLookup);
     } else {
       const $icon = convert(DOM.createElement.bind(DOM), renderedIcon.abstract[0]);
-      this._iconhtml = $icon.outerHTML;
+      const factory = this._compiler.compile(`<template>${$icon.outerHTML}</template>`, this._resources);
+      const view = factory.create(this._container, this._bindingContext);
+
+      this._slot.removeAll();
+      this._slot.add(view);
     }
+  }
+
+  unbind(): void {
+    this._slot.unbind();
+  }
+
+  detached(): void {
+    this._slot.detached();
+    this._slot.removeAll();
   }
 
   private createIcon() {
