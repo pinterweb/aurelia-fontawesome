@@ -57,20 +57,20 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
 export class FontAwesomeIconCustomElement implements IconOptions {
   public static inject() { return [Element, PluginIconVisitor ]; }
 
-  @bindable public border;
-  @bindable public className;
-  @bindable public fixedWidth;
+  @bindable public border: boolean;
+  @bindable public className: string;
+  @bindable public fixedWidth: boolean;
   @bindable public flip: FlipOption;
   @bindable public icon: BoundIconArg;
-  @bindable public inverse;
-  @bindable public listItem;
+  @bindable public inverse: boolean;
+  @bindable public listItem: boolean;
   @bindable public mask: BoundIconArg;
   @bindable public pull: PullOption;
-  @bindable public pulse;
+  @bindable public pulse: boolean;
   @bindable public rotation: RotationOption;
   @bindable public size: SizeOption;
-  @bindable public spin;
-  @bindable public style;
+  @bindable public spin: boolean;
+  @bindable public style: {[key: string]: string};
   @bindable public symbol: SymbolOption;
   @bindable public title;
   @bindable public transform: TransformOption;
