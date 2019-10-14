@@ -8,7 +8,6 @@ import {
   faMugHot
 } from '@fortawesome/free-solid-svg-icons';
 import { fab  } from '@fortawesome/free-brands-svg-icons'
-import './styles.css';
 
 export function configure(aurelia: Aurelia) {
   const options = {
