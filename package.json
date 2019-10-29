@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@fortawesome/free-brands-svg-icons": "^5.10.2",
+    "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
     "@types/jasmine": "^2.8.9",
     "@types/node": "^10.11.6",

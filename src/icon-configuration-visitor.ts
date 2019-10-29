@@ -17,6 +17,7 @@ const defaultIconOptions: IconOptions = {
   inverse: false,
   listItem: false,
   mask: null,
+  prefix: 'fas',
   pull: null,
   pulse: false,
   rotation: null,

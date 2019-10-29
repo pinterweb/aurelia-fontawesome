@@ -37,7 +37,7 @@ export interface FontAwesomeIconCustomElementVisitor {
   visit(iconElement: FontAwesomeIconCustomElement);
 }
 
-function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | null {
+function normalizeIconArgs(icon?: BoundIconArg, prefix?: IconPrefix): IconLookup | IconDefinition | null {
   if (icon == null) {
     return null;
   }
@@ -51,7 +51,7 @@ function normalizeIconArgs(icon?: BoundIconArg): IconLookup | IconDefinition | n
   }
 
   if (typeof icon === 'string') {
-    return { prefix: 'fas', iconName: icon };
+    return { prefix, iconName: icon };
   }
 
   return null;
@@ -80,6 +80,7 @@ export class FontAwesomeIconCustomElement implements IconOptions {
   @bindable public title: string;
   @bindable public transform: TransformOption;
   @bindable public stack: StackOption;
+  @bindable public prefix: IconPrefix;
 
   private logger = LogManager.getLogger('aurelia-fontawesome');
   private iconLookup: any;
@@ -106,7 +107,7 @@ export class FontAwesomeIconCustomElement implements IconOptions {
   }
 
   public propertyChanged(prop: string) {
-    if (prop === 'icon') {
+    if (prop === 'icon' || prop === 'prefix') {
       this.createIcon();
     } else {
       this.renderIcon();
@@ -154,7 +155,7 @@ export class FontAwesomeIconCustomElement implements IconOptions {
       ...(this.className ? this.className.split(' ') : [])
     ]);
     const otherIconParams = {
-      ...objectWithKey('mask', normalizeIconArgs(this.mask)),
+      ...objectWithKey('mask', normalizeIconArgs(this.mask, this.prefix)),
       ...objectWithKey('transform',
         typeof this.transform === 'string'
           ? parse.transform(this.transform)
@@ -193,7 +194,7 @@ export class FontAwesomeIconCustomElement implements IconOptions {
   }
 
   private createIcon() {
-    this.iconLookup = normalizeIconArgs(this.icon);
+    this.iconLookup = normalizeIconArgs(this.icon, this.prefix);
 
     if (this.iconLookup !== null) {
       this.renderIcon();

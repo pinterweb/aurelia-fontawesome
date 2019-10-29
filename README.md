@@ -12,7 +12,7 @@ Inspired by:
 - [Installation](#installation)
 - [Usage](#usage)
   * [Zero Configuration](#zero-configuration)
-  * [Global Configuration](#global-configuration)
+  * [Default Configuration](#default-configuration)
   * [Explicit Import](#explicit-import)
   * [Non FAS Icons](#non-fas-icons)
   * [Binding Variations](#binding-variations)
@@ -59,7 +59,7 @@ export function configure(aurelia) {
 }
 ```
 
-### Global Configuration
+### Default Configuration
 ```javascript
 import { PLATFORM } from 'aurelia-framework';
 
@@ -128,6 +128,8 @@ _foobar.html_
 - The icon can be a string, like `icon="coffee"`.
 - The icon can be an `Array` of strings, where the first element is a prefix,
   and the second element is the icon name: `icon.bind="['fab', 'apple']"`
+- The prefix can be bound, the default is `fas`: `prefix="fab" icon="apple"`
+- A default prefix can be setup in the plugin configuration: `{ prefix="fab" }`
 
 ## Dependencies
 

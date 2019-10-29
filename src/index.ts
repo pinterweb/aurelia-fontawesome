@@ -36,16 +36,17 @@ export interface IconOptions {
   inverse: boolean;
   listItem: boolean;
   mask: BoundIconArg;
+  prefix: IconPrefix;
   pull: PullOption;
   pulse: boolean;
   rotation: RotationOption;
   size: SizeOption;
   spin: boolean;
+  stack?: StackOption;
   style: {[key: string]: string};
   symbol: SymbolOption;
   title: string;
   transform: TransformOption;
-  stack?: StackOption;
 }
 
 type IconOptionsType = IconOptions;

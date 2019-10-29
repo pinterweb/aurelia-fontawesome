@@ -18,13 +18,14 @@ import {
 } from './helpers';
 import {
   faCoffee,
-  faCircle
+  faCircle,
+  farCoffee
 } from './icons';
 import { IconVisitorInjectionKey } from 'resources/plugin-icon-visitor';
 import * as fontawesome from '@fortawesome/fontawesome-svg-core';
 import * as logging from 'aurelia-logging';
 
-fontawesome.library.add(faCoffee, faCircle);
+fontawesome.library.add(faCoffee, faCircle, farCoffee);
 
 describe('the font awesome icon custom element', () => {
   let component: ComponentTester<FontAwesomeIconCustomElement>;
@@ -49,6 +50,7 @@ describe('the font awesome icon custom element', () => {
     // initialized, the `propertyChanged()` is used to watch changes
     visitorSpy.visit.and.callFake((icon) => {
       icon.className = 'foobar';
+      icon.prefix = 'fas'
     });
 
     component.configure = aurelia => {
@@ -644,6 +646,43 @@ describe('the font awesome icon custom element', () => {
       done();
     });
   });
+
+  describe('the icon prefix', () => {
+    it('accepts a prefix', async done => {
+      /* Arrange */
+      component
+        .inView(`<font-awesome-icon icon="coffee" prefix="far"></font-awesome-icon>`)
+
+      await component.create(bootstrap);
+
+      /* Act */
+      const $svg = await component.waitForElement('svg');
+
+      expect($svg.dataset.prefix).toEqual('far');
+      done();
+    });
+
+    it('recompiles when the prefix changes', async done => {
+      /* Arrange */
+      const context = { prefix: "fas" };
+      component
+        .inView(`<font-awesome-icon icon="coffee" prefix.bind="prefix"></font-awesome-icon>`)
+        .boundTo(context);
+
+      await component.create(bootstrap);
+      const $beforePropChange = await component.waitForElement('svg');
+
+      /* Act */
+      context.prefix = "far";
+
+      expect($beforePropChange.dataset.prefix).not.toEqual('far');
+
+      const $afterPropChange = await component.waitForElement(`svg[data-prefix="far"]`);
+
+      expect($afterPropChange.dataset.prefix).toEqual('far');
+      done();
+    });
+  })
 
   it('recompiles when the icon when it changes', async done => {
     /* Arrange */

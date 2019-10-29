@@ -36,12 +36,16 @@
           </div>
           <div class="card-content">
             <p class="title is-4">HTML Attributes</p>
+            <div class="content">
+              The bulma class value "has-text-danger" is passed to the icon
+              to make it red
+            </div>
           </div>
         </div>
         <div class="card column">
           <div class="card-header is-centered">
-            <font-awesome-icon size="2x" icon="spinner" spin.bind="true"></font-awesome-icon>
-            <font-awesome-icon size="2x" icon="spinner" pulse.bind="true"></font-awesome-icon>
+            <font-awesome-icon icon="spinner" spin.bind="true"></font-awesome-icon>
+            <font-awesome-icon icon="spinner" pulse.bind="true"></font-awesome-icon>
           </div>
           <div class="card-content">
             <p class="title is-4">Animations</p>
@@ -56,7 +60,7 @@
       <div class="columns">
         <div class="column card">
           <div class="card-header is-centered">
-            <font-awesome-icon size="2x" icon="home" mask="circle" size="3x"></font-awesome-icon>
+            <font-awesome-icon icon="home" mask="circle"></font-awesome-icon>
           </div>
           <div class="card-content">
             <p class="title is-4">Masking</p>
@@ -69,38 +73,51 @@
         </div>
         <div class="column card">
           <div class="card-header is-centered">
-            <font-awesome-icon size="2x" icon.bind="icon"></font-awesome-icon>
+            <font-awesome-icon icon.bind="icon"></font-awesome-icon>
           </div>
           <div class="card-content">
             <p class="title is-4">Reactive</p>
             <div class="content">
+              <p>
+                The icon will be recreated when a bindable property is changes.
+              </p>
               <button
                 class="button"
                 click.delegate="icon=(icon==='coffee' ? 'mug-hot' : 'coffee')">
-                Brew
+                Change bound icon
               </button>
             </div>
           </div>
         </div>
         <div class="column card">
           <div class="card-header is-centered">
-            <font-awesome-icon size="2x" icon.bind="[ 'fab', 'microsoft' ]"></font-awesome-icon>
-            +
-            <font-awesome-icon size="2x" icon.bind="[ 'fab', 'github' ]"></font-awesome-icon>
+            <font-awesome-icon if.bind="!rotated" prefix="fas" icon="coffee"></font-awesome-icon>
+            <font-awesome-icon if.bind="rotated" prefix="fas" icon="coffee"></font-awesome-icon>
           </div>
           <div class="card-content">
-            <p class="title is-4">Brand Icons</p>
+            <p class="title is-4">Plugin Configuration</p>
+            <div class="content">
+              <p>
+                The icon rotation will change for the new icon because the configuration
+                object "rotation" property is being reset
+              </p>
+              <button class="button" click.delegate="changeRotation()">Change default rotation</button>
+            </div>
           </div>
         </div>
         <div class="column card">
           <div class="card-header is-centered">
-            <font-awesome-icon size="2x" if.bind="!coffeeSpilled" icon="coffee"></font-awesome-icon>
-            <font-awesome-icon size="2x" if.bind="coffeeSpilled" icon="mug-hot"></font-awesome-icon>
+            <font-awesome-icon if.bind="prefix" prefix="${prefix}" icon="thumbs-up"></font-awesome-icon>
+            <font-awesome-icon if.bind="!prefix" icon="thumbs-up"></font-awesome-icon>
           </div>
           <div class="card-content">
-            <p class="title is-4">Global Configuration</p>
+            <p class="title is-4">Icon prefix</p>
             <div class="content">
-              <button class="button" click.delegate="spillGlobal()">Spill</button>
+              <p>
+                You can override the default "fas" icon prefix by binding
+                to another prefix in your view or the icon configuration
+              </p>
+              <button class="button" click.delegate="changePrefix()">Change default prefix</button>
             </div>
           </div>
         </div>
