@@ -66,6 +66,7 @@ describe('the icon configuration visitor', () => {
       expect(iconElement.symbol).toEqual(null);
       expect(iconElement.title).toEqual('');
       expect(iconElement.transform).toEqual('');
+      expect(iconElement.prefix).toEqual('fas');
     });
   });
 
@@ -88,7 +89,8 @@ describe('the icon configuration visitor', () => {
       style: { foo: 'bar' },
       symbol: 'symb',
       title: 'title',
-      transform: 'transform'
+      transform: 'transform',
+      prefix: 'far'
     }
     sut = new IconConfigurationVisitor(iconOptions)
 
@@ -112,5 +114,6 @@ describe('the icon configuration visitor', () => {
     expect(iconElement.symbol).toEqual('symb');
     expect(iconElement.title).toEqual('title');
     expect(iconElement.transform).toEqual('transform');
+    expect(iconElement.prefix).toEqual('far');
   });
 });

@@ -90,7 +90,7 @@ export class FontAwesomeIconCustomElement implements IconOptions {
   }
 
   public propertyChanged(prop: string) {
-    if (prop === 'icon') {
+    if (prop === 'icon' || prop === 'prefix') {
       this.createIcon();
     } else {
       this.renderIcon();
