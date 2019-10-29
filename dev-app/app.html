@@ -2,7 +2,9 @@
   <require from="./styles.css"></require>
 
   <h1 class="title has-text-centered">${message}</h1>
-  <h2 class="subtitle has-text-centered">(Most examples use the size attribute for better display)</h2>
+  <h2 class="subtitle has-text-centered">
+    (Most examples use the size attribute for better display)
+  </h2>
 
   <section class="section">
     <div class="container">
@@ -24,7 +26,9 @@
           <div class="card-content">
             <p class="title is-4">Sizes</p>
             <div class="content">
-              <a href="https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons">
+              <a
+                href="https://fontawesome.com/how-to-use/on-the-web/styling/sizing-icons"
+              >
                 Sizing Icons
               </a>
             </div>
@@ -32,25 +36,37 @@
         </div>
         <div class="card column">
           <div class="card-header is-centered">
-            <font-awesome-icon size="2x" class="has-text-danger" icon="coffee"></font-awesome-icon>
+            <font-awesome-icon
+              size="2x"
+              class="has-text-danger"
+              icon="coffee"
+            ></font-awesome-icon>
           </div>
           <div class="card-content">
             <p class="title is-4">HTML Attributes</p>
             <div class="content">
-              The bulma class value "has-text-danger" is passed to the icon
-              to make it red
+              The bulma class value "has-text-danger" is passed to the icon to
+              make it red
             </div>
           </div>
         </div>
         <div class="card column">
           <div class="card-header is-centered">
-            <font-awesome-icon icon="spinner" spin.bind="true"></font-awesome-icon>
-            <font-awesome-icon icon="spinner" pulse.bind="true"></font-awesome-icon>
+            <font-awesome-icon
+              icon="spinner"
+              spin.bind="true"
+            ></font-awesome-icon>
+            <font-awesome-icon
+              icon="spinner"
+              pulse.bind="true"
+            ></font-awesome-icon>
           </div>
           <div class="card-content">
             <p class="title is-4">Animations</p>
             <div class="content">
-              <a href="https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons">
+              <a
+                href="https://fontawesome.com/how-to-use/on-the-web/styling/animating-icons"
+              >
                 Animating Icons
               </a>
             </div>
@@ -65,7 +81,10 @@
           <div class="card-content">
             <p class="title is-4">Masking</p>
             <div class="content">
-              <a target="_blank" href="https://fontawesome.com/how-to-use/on-the-web/styling/masking">
+              <a
+                target="_blank"
+                href="https://fontawesome.com/how-to-use/on-the-web/styling/masking"
+              >
                 Masking Icons
               </a>
             </div>
@@ -83,7 +102,8 @@
               </p>
               <button
                 class="button"
-                click.delegate="icon=(icon==='coffee' ? 'mug-hot' : 'coffee')">
+                click.delegate="icon=(icon==='coffee' ? 'mug-hot' : 'coffee')"
+              >
                 Change bound icon
               </button>
             </div>
@@ -91,33 +111,52 @@
         </div>
         <div class="column card">
           <div class="card-header is-centered">
-            <font-awesome-icon if.bind="!rotated" prefix="fas" icon="coffee"></font-awesome-icon>
-            <font-awesome-icon if.bind="rotated" prefix="fas" icon="coffee"></font-awesome-icon>
+            <font-awesome-icon
+              if.bind="!rotated"
+              prefix="fas"
+              icon="coffee"
+            ></font-awesome-icon>
+            <font-awesome-icon
+              if.bind="rotated"
+              prefix="fas"
+              icon="coffee"
+            ></font-awesome-icon>
           </div>
           <div class="card-content">
             <p class="title is-4">Plugin Configuration</p>
             <div class="content">
               <p>
-                The icon rotation will change for the new icon because the configuration
-                object "rotation" property is being reset
+                The icon rotation will change for the new icon because the
+                configuration object "rotation" property is being reset
               </p>
-              <button class="button" click.delegate="changeRotation()">Change default rotation</button>
+              <button class="button" click.delegate="changeRotation()">
+                Change default rotation
+              </button>
             </div>
           </div>
         </div>
         <div class="column card">
           <div class="card-header is-centered">
-            <font-awesome-icon if.bind="prefix" prefix="${prefix}" icon="thumbs-up"></font-awesome-icon>
-            <font-awesome-icon if.bind="!prefix" icon="thumbs-up"></font-awesome-icon>
+            <font-awesome-icon
+              if.bind="prefix"
+              prefix="${prefix}"
+              icon="thumbs-up"
+            ></font-awesome-icon>
+            <font-awesome-icon
+              if.bind="!prefix"
+              icon="thumbs-up"
+            ></font-awesome-icon>
           </div>
           <div class="card-content">
             <p class="title is-4">Icon prefix</p>
             <div class="content">
               <p>
-                You can override the default "fas" icon prefix by binding
-                to another prefix in your view or the icon configuration
+                You can override the default "fas" icon prefix by binding to
+                another prefix in your view or the icon configuration
               </p>
-              <button class="button" click.delegate="changePrefix()">Change default prefix</button>
+              <button class="button" click.delegate="changePrefix()">
+                Change default prefix
+              </button>
             </div>
           </div>
         </div>
