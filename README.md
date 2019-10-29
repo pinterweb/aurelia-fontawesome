@@ -128,7 +128,7 @@ _foobar.html_
 - The icon can be a string, like `icon="coffee"`.
 - The icon can be an `Array` of strings, where the first element is a prefix,
   and the second element is the icon name: `icon.bind="['fab', 'apple']"`
-- The prefix can be set on different bindable: `prefix="fab" icon="apple"`
+- The prefix can be bound, the default is `fas`: `prefix="fab" icon="apple"`
 - A default prefix can be setup in the plugin configuration: `{ prefix="fab" }`
 
 ## Dependencies
