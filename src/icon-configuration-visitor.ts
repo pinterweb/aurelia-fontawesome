@@ -17,6 +17,7 @@ const defaultIconOptions: IconOptions = {
   inverse: false,
   listItem: false,
   mask: null,
+  prefix: 'fas',
   pull: null,
   pulse: false,
   rotation: null,
@@ -26,8 +27,7 @@ const defaultIconOptions: IconOptions = {
   style: {},
   symbol: null,
   title: '',
-  transform: '',
-  prefix: 'fas'
+  transform: ''
 }
 
 export class IconConfigurationVisitor implements IconVisitor {
