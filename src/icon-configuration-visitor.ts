@@ -1,23 +1,19 @@
-import {
-  FontAwesomeIconCustomElement
-} from './font-awesome-icon';
-import {
-  LogManager
-} from 'aurelia-framework';
+import { FontAwesomeIconCustomElement } from "./font-awesome-icon";
+import { LogManager } from "aurelia-framework";
 
-type IconOptions = import('./index').IconOptions;
-type IconVisitor = import('./font-awesome-icon').FontAwesomeIconCustomElementVisitor;
+type IconOptions = import("./index").IconOptions;
+type IconVisitor = import("./font-awesome-icon").FontAwesomeIconCustomElementVisitor;
 
 const defaultIconOptions: IconOptions = {
   border: false,
-  className: '',
+  className: "",
   fixedWidth: false,
   flip: null,
   icon: null,
   inverse: false,
   listItem: false,
   mask: null,
-  prefix: 'fas',
+  prefix: "fas",
   pull: null,
   pulse: false,
   rotation: null,
@@ -26,29 +22,32 @@ const defaultIconOptions: IconOptions = {
   stack: null,
   style: {},
   symbol: null,
-  title: '',
-  transform: ''
-}
+  title: "",
+  transform: ""
+};
 
 export class IconConfigurationVisitor implements IconVisitor {
-  _logger = LogManager.getLogger('aurelia-fontawesome');
-  _overrideOptions: Partial<IconOptions>
+  _logger = LogManager.getLogger("aurelia-fontawesome");
+  _overrideOptions: Partial<IconOptions>;
 
   constructor(private iconOptions: Partial<IconOptions>) {
     this._overrideOptions = iconOptions || {};
   }
 
-  visit(iconElement: FontAwesomeIconCustomElement) {
+  visit(iconElement: FontAwesomeIconCustomElement): void {
     if (!iconElement) {
-      this._logger.error('IconConfigurationVisitor: icon could not be configured because ' +
-                        'it was not passed into the `visit()` method');
-
+      this._logger.error(
+        "IconConfigurationVisitor: icon could not be configured because " +
+          "it was not passed into the `visit()` method"
+      );
     } else {
       for (const key in defaultIconOptions) {
         const overrideValue = this._overrideOptions[key];
 
         iconElement[key] =
-          (typeof(overrideValue) !== 'undefined' ? overrideValue : defaultIconOptions[key]);
+          typeof overrideValue !== "undefined"
+            ? overrideValue
+            : defaultIconOptions[key];
       }
     }
   }
