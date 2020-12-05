@@ -8,8 +8,6 @@ import {
 import { IconConfigurationVisitor } from "resources/icon-configuration-visitor";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
-type Library = import("@fortawesome/fontawesome-svg-core").Library;
-
 describe("aurelia setup", () => {
   let aurelia: jasmine.SpyObj<FrameworkConfiguration>;
   let container: jasmine.SpyObj<Container>;

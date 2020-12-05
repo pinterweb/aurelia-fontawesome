@@ -68,7 +68,6 @@ export interface IconOptions {
   transform: TransformOption;
 }
 
-type IconOptionsType = IconOptions;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ConfigurationArgs = any | Partial<FontAwesomePluginOptions>;
 
